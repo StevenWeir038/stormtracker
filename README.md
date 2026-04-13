@@ -88,6 +88,6 @@ Note the environment change in the command line.
 Cloning is like downloading your origin version of the project from GitHub to a selected directory in your local machine.
 
 Use **Anaconda Prompt** to select the **correct environment** and **navigate to the directory** where you want to **clone** the origin repository on your local machine using `cd filepath`.
-Next type `git clone URL myfolder` were *URL* is the weblink to your origin repository and *my folder* is the local drive directory containing your project.
+Next type `git clone URL` were *URL* is the weblink to your origin repository and *my folder* is the local drive directory containing your project.
 
 ![clone repo 1 img](/setupimgs/clonerepo1.png)
