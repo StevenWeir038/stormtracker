@@ -91,3 +91,14 @@ Use **Anaconda Prompt** to select the **correct environment** and **navigate to 
 Next type `git clone URL` were *URL* is the weblink to your origin repository and *my folder* is the local drive directory containing your project.
 
 ![clone repo 1 img](/setupimgs/clonerepo1.png)
+
+### Manual Installs
+Additional Packages were added including [matplotlib](https://matplotlib.org/stable/install/index.html), [tropycal](https://anaconda.org/channels/conda-forge/packages/tropycal/overview) and [hurdat2py](https://pypi.org/project/hurdat2py/0.3.2/ ).
+Note hurdat2py was installed using *pip* rather than directly through *conda*.
+The above packages handle data retrieval, processing and display, thus allowing us to focus on writing analytical functions.
+
+![manual installs 1 img](/setupimgs/manualinstalls1.png)
+
+![manual installs 2 img](/setupimgs/manualinstalls2.png)
+
+![manual installs 2 img](/setupimgs/manualinstalls3.png)
