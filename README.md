@@ -60,3 +60,22 @@ Select **Anaconda Navigator** from the **Start** menu to open application.
 Give your new environment a meaningful name (e.g. *simplehurricanetracker*,  I later changed this to *stormtracker*)
 
 Select Python version 3.13.12 as the language from the dropdown menu then **Import**. (note this may take several minutes)
+
+#### Manual Installs
+As the project developed it became clear that other libraries could be useful/necessary.  These were manually installed in **conda** using the command line interface (CLI) in **Anaconda Prompt** per each developer’s instructions. 
+
+Install **Anaconda Prompt** from **Anaconda Navigator / Home / Install** menu. It can be opened from the Windows Start menu in the same way as Anaconda Navigator.
+
+![envsetup 3 img](/setupimgs/envsetup3.png)
+
+In the **Start** menu, you should find a prompt with the same name as your environment name (*stormtracker*).
+
+Alternatively you can open the standard **Anaconda Prompt** and activate your new project environment (*stormtracker*) instead of using the default base environment with the following code.
+
+```python
+conda activate stormtracker
+```
+
+Note the environment change in the command line.
+
+![envsetup 4 img](/setupimgs/envsetup4.png)
