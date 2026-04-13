@@ -61,7 +61,7 @@ Give your new environment a meaningful name (e.g. *simplehurricanetracker*,  I l
 
 Select Python version 3.13.12 as the language from the dropdown menu then **Import**. (note this may take several minutes)
 
-#### Manual Installs
+#### Install Anaconda Prompt
 As the project developed it became clear that other libraries could be useful/necessary.  These were manually installed in **conda** using the command line interface (CLI) in **Anaconda Prompt** per each developer’s instructions. 
 
 Install **Anaconda Prompt** from **Anaconda Navigator / Home / Install** menu. It can be opened from the Windows Start menu in the same way as Anaconda Navigator.
@@ -79,3 +79,15 @@ conda activate stormtracker
 Note the environment change in the command line.
 
 ![envsetup 4 img](/setupimgs/envsetup4.png)
+
+### Github Repository – Part 2
+
+#### Clone Repository
+**Clone** the forked repository with the help of this [guide](https://www.w3schools.com/git/git_clone.asp)
+
+Cloning is like downloading your origin version of the project from GitHub to a selected directory in your local machine.
+
+Use **Anaconda Prompt** to select the **correct environment** and **navigate to the directory** where you want to **clone** the origin repository on your local machine using `cd filepath`.
+Next type `git clone URL myfolder` were *URL* is the weblink to your origin repository and *my folder* is the local drive directory containing your project.
+
+![clone repo 1 img](/setupimgs/clonerepo1.png)
