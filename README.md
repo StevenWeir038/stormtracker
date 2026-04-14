@@ -132,3 +132,35 @@ Select **Create from Existing Sources** if prompted by a new dialog box.
 You should get a similar result as below showing the files in the cloned directory.
 
 ![ide pycharm 3 img](/setupimgs/idepycharm3.png)
+
+#### Configuring PyCharm to run a specific Script
+For Pycharm to run the correct script we need to configure the *Run* button. (`Shift + F10`)
+
+Select **Current File / Edit Configurations** to open the **Run/Debug Configurations** dialog.
+
+![ide pycharm 4 img](/setupimgs/idepycharm4.png)
+
+Add a new Configuration
+
+![ide pycharm 5 img](/setupimgs/idepycharm5.png)
+
+Set the following parameters:
+    - Select **Python**, 
+    - change **Name** to *stormtracker* 
+    - set **Script** to the location with file name of the scrip to run.
+    - Set the **Working directory** to where the script is saved on your local machine
+    - Select **OK**.
+
+It should look similar to the below image.
+
+![ide pycharm 6 img](/setupimgs/idepycharm6.png)
+
+The **Current File** will change the *stormtracker* script when you select Run instead of the default *main*.
+
+![ide pycharm 7 img](/setupimgs/idepycharm7.png)
+
+Ensure you are working in the correct *conda* environment and local file directory in the terminal.
+
+Selecting the green '*Play* button or pressing Alt+F10 on the keyboard will run the code from the stormtracker file.
+
+Alternatively, to run the code in the terminal, type `python stormtracker.py`.
