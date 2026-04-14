@@ -102,3 +102,33 @@ The above packages handle data retrieval, processing and display, thus allowing 
 ![manual installs 2 img](/setupimgs/manualinstalls2.png)
 
 ![manual installs 2 img](/setupimgs/manualinstalls3.png)
+
+### IDE - PyCharm
+Download the free version of [Pycharm](https://www.jetbrains.com/pycharm/download/?section=windows).
+#### Configuring PyCharm to work with the repository and new environment
+
+Open **Pycharm** From the desktop/**Start** menu or directly from **Anaconda Navigator/Home**. Ensure correct environment (*stormtracker*) is selected.
+![ide pycharm 1 img](/setupimgs/idepycharm1.png)
+
+From **Menu** select **File / New Project**.
+
+In the New Project dialog box configure the interpreter.  This enables the IDE to run the correct code for the project when prompted using the conda environment settings.
+
+For **Location**, select the filepath to the cloned repository
+
+Leave **Create Git Repository** blank as you have already forked and cloned the repository in previous steps.
+
+Choose *Conda* for **Select Existing Custom Environment**.
+
+**Path to Conda** is the .bat file location on your local machine where you installed conda.
+
+Set the Environment to stormtracker which you previously set up.
+
+Select **Create**.
+
+![ide pycharm 2 img](/setupimgs/idepycharm2.png)
+
+Select **Create from Existing Sources** if prompted by a new dialog box.
+You should get a similar result as below showing the files in the cloned directory.
+
+![ide pycharm 3 img](/setupimgs/idepycharm3.png)
