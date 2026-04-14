@@ -1,6 +1,6 @@
 # stormtracker
 
-### Setup & Installation
+## Setup & Installation
 Note that screenshots below are meant as a May 2026 guide and may become outdated over time.
 The following insructions will assist in recreating and building on the project.
 
@@ -164,3 +164,11 @@ Ensure you are working in the correct *conda* environment and local file directo
 Selecting the green '*Play* button or pressing Alt+F10 on the keyboard will run the code from the stormtracker file.
 
 Alternatively, to run the code in the terminal, type `python stormtracker.py`.
+
+## Testing
+
+### Setup and Configuration
+
+#### Test 1 - Check PyCharm IDE is configured to run *stormtracker* script
+**Status** - PASS
+![ide pycharmconfigtest 1 img](/setupimgs/idepycharmconfigtest1.png)
