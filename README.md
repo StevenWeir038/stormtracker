@@ -93,15 +93,17 @@ Next type `git clone URL` were *URL* is the weblink to your origin repository an
 ![clone repo 1 img](/setupimgs/clonerepo1.png)
 
 ### Manual Installs
-Additional Packages were added including [matplotlib](https://matplotlib.org/stable/install/index.html), [tropycal](https://anaconda.org/channels/conda-forge/packages/tropycal/overview) and [hurdat2py](https://pypi.org/project/hurdat2py/0.3.2/ ).
-Note hurdat2py was installed using *pip* rather than directly through *conda*.
-The above packages handle data retrieval, processing and display, thus allowing us to focus on writing analytical functions.
+Additional Packages were added including [*matplotlib/](https://matplotlib.org/stable/install/index.html), [*tropycal*](https://anaconda.org/channels/conda-forge/packages/tropycal/overview), [*hurdat2py*](https://pypi.org/project/hurdat2py/0.3.2/ ) and [*geopy*](https://geopy.readthedocs.io/en/stable/#installation).
+Note *hurdat2py* and *geopy* were installed using *pip* rather than directly through *conda*.
+The above packages mainly handle data retrieval, processing, display. Geopy has s useful library to help us write analytical functions.
 
 ![manual installs 1 img](/setupimgs/manualinstalls1.png)
 
 ![manual installs 2 img](/setupimgs/manualinstalls2.png)
 
-![manual installs 2 img](/setupimgs/manualinstalls3.png)
+![manual installs 3 img](/setupimgs/manualinstalls3.png)
+
+![manual installs 4 img](/setupimgs/manualinstalls4.png)
 
 ### IDE - PyCharm
 Download the free version of [Pycharm](https://www.jetbrains.com/pycharm/download/?section=windows).
@@ -158,12 +160,13 @@ It should look similar to the below image.
 The **Current File** will change the *stormtracker* script when you select Run instead of the default *main*.
 
 ![ide pycharm 7 img](/setupimgs/idepycharm7.png)
-
-Ensure you are working in the correct *conda* environment and local file directory in the terminal.
+![img_2.png](img_2.png)
 
 Selecting the green '*Play* button or pressing Alt+F10 on the keyboard will run the code from the stormtracker file.
 
 Alternatively, to run the code in the terminal, type `python stormtracker.py`.
+Ensure you are working in the correct *conda* environment and local file directory in the terminal.
+
 
 ## Testing
 
