@@ -6,6 +6,16 @@ import matplotlib.ticker as mticker  # use to display gridlines
 import numpy as np
 
 
+import hurdat2py
+import datetime as dt
+
+hd2 = hurdat2py.Hurdat2(r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker.hurdat2data2025.txt")
+
+# Storm object:
+storm = hd2['katrina', 2005]
+
+print(storm.to_dataframe())
+# storm.plot()  # can this function be emulated on own map...
 
 '''
 Global variables [accessible to whole module each time an instance of plt is called]
