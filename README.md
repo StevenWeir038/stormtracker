@@ -178,3 +178,22 @@ Ensure you are working in the correct *conda* environment and local file directo
 #### Test 2 - Create a simple output map of the Gulf of Mexico
 **Status** - PASS
 ![test 2 map display img](/imgs/testimgs/test2_mapdisplay.png)
+
+#### Test 3 - Add gridlines map of the Gulf of Mexico
+**Status** - PARTIAL SUCCESS
+
+Gridlines displaying but labels on top and right of axes still visible despite being set to `False`
+after grid params have been set
+
+```Python
+gridparams = {'crs': ccrs.PlateCarree(central_longitude=0),
+              'draw_labels':True, 'linewidth':0.5,
+              'color':'gray', 'alpha':1, 'linestyle':'--'}
+```
+
+``` Python
+gl.xlabels_top = False  # turn off x labels on top of axes
+gl.ylabels_right = False  # turn off y labels on right of axes
+```
+
+![test 3 add gridlines with labels img](/imgs/testimgs/test3_addgridlineswithlabels.png)
