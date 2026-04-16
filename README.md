@@ -183,7 +183,10 @@ Ensure you are working in the correct *conda* environment and local file directo
 **Status** - PARTIAL SUCCESS
 
 Gridlines displaying but labels on top and right of axes still visible despite being set to `False`
-after grid params have been set
+after grid params have been set to True.
+`xlabels_top` and `ylabels_right` are depreciated and replaced with `top_labels` and `right_labels`.
+Same Boolean applied.
+
 
 ```Python
 gridparams = {'crs': ccrs.PlateCarree(central_longitude=0),
@@ -192,8 +195,16 @@ gridparams = {'crs': ccrs.PlateCarree(central_longitude=0),
 ```
 
 ``` Python
-gl.xlabels_top = False  # turn off x labels on top of axes
-gl.ylabels_right = False  # turn off y labels on right of axes
+    gl.xlabels_top = False  # turn off x labels on top of axes
+    gl.ylabels_right = False  # turn off y labels on right of axes
 ```
 
 ![test 3 add gridlines with labels img](/imgs/testimgs/test3_addgridlineswithlabels.png)
+
+**Status** - RESOLVED
+```Python
+    gl.top_labels = False  # turn off x labels on top of axes
+    gl.right_labels = False  # turn off y labels on right of axes
+```
+
+![test 3 add gridlines with labels resolved img](/imgs/testimgs/test3_addgridlineswithlabelsresolved.png)

@@ -5,6 +5,8 @@ from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER  # to 
 import matplotlib.ticker as mticker  # use to display gridlines
 import numpy as np
 
+
+
 '''
 Global variables [accessible to whole module each time an instance of plt is called]
 '''
@@ -17,8 +19,8 @@ proj = ccrs.PlateCarree()
 
 #give gridlines same projection.  Set grid style parameters
 gridparams = {'crs': ccrs.PlateCarree(central_longitude=0),
-              'draw_labels':True, 'linewidth':0.5,
-              'color':'gray', 'alpha':1, 'linestyle':'--'}
+              'draw_labels':True, 'linewidth':0.25,
+              'color':'gray', 'alpha':1, 'linestyle':'-'}
 
 '''
 Functions
@@ -40,13 +42,15 @@ def displaymap(ax):
 
     # Add bespoke gridlines to map
     gl = ax.gridlines(**gridparams)
-    gl.xlabels_top = False  # turn off x labels on top of axes
-    gl.ylabels_right = False  # turn off y labels on right of axes
+    gl.top_labels = False  # turn off x labels on top of axes
+    gl.right_labels = False  # turn off y labels on right of axes
     gl.xlocator = mticker.FixedLocator(np.arange(-180, 180 + 40, 10))
     gl.ylocator = mticker.FixedLocator(np.arange(-90, 90 + 10, 10))
     gl.xformatter = LONGITUDE_FORMATTER
     gl.yformatter = LATITUDE_FORMATTER
 
+    #Add title to map
+    ax.title.set_text('Hurricane Track Map | Gulf of Mexico')
 
     # Set extent to Gulf Coast
     ax.set_extent([-100, -60, 17, 37], proj)  # long min, long max, lat min, lat max boundary coordinate values
@@ -63,10 +67,11 @@ def savefig(fig):
 
 
 '''
-Create a plt figure instance with axes containing PlateCaree default map projection
+Create a blank plt figure instance with axes containing PlateCaree default map projection
 '''
 fig = plt.figure(figsize=(8, 8))  # create a figure of size 8x8 (representing the page size in inches)
 ax = plt.axes(projection=proj)  # use a PlateCarre projection in the axes object
 ax = displaymap(ax) # create an axes object in the figure
 savefig(fig)  # save an output file to view
+
 
