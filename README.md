@@ -2,7 +2,7 @@
 
 ## Setup & Installation
 Note that screenshots below are meant as a May 2026 guide and may become outdated over time.
-The following insructions will assist in recreating and building on the project.
+The following instructions will assist in recreating and building on the project.
 
 ### Github Repository – Part 1
 
@@ -12,11 +12,11 @@ If you are new to [Github](https://docs.github.com/en/get-started/start-your-jou
 #### Forking the Repository
 - [**Fork**](https://github.com/StevenWeir038/stormtracker/tree/main) the stormtracker repository and provide an optimal description.
 
-![Fork Repo1 img](/setupimgs/forkrepo1.png)
+![Fork Repo1 img](/imgs/setupimgs/forkrepo1.png)
 
 - Name the forked repository ***stormtracker*** and provide an optional description. Select **Copy the main branch only** then **Create Fork**.
 
-![Fork Repo2 img](/setupimgs/forkrepo2.png)
+![Fork Repo2 img](/imgs/setupimgs/forkrepo2.png)
 
 You now have a copy of the project in your own *origin* repository.  Commits and branching made on your local machine should be made to the origin.  Note, changes here will not affect the forked *upstream* repository.
 
@@ -41,7 +41,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python>3.9<3.13
+  - python>3.9
   - pandas
   - geopandas
   - cartopy
@@ -51,11 +51,11 @@ dependencies:
 
 Select **Anaconda Navigator** from the **Start** menu to open application.
 
-![envsetup 1 img](/setupimgs/envsetup1.png)
+![envsetup 1 img](/imgs/setupimgs/envsetup1.png)
 
 **Select Environments** then **Import From** the `environment.yml` file you just created on the local drive.
 
-![envsetup 2 img](/setupimgs/envsetup2.png)
+![envsetup 2 img](/imgs/setupimgs/envsetup2.png)
 
 Give your new environment a meaningful name (e.g. *simplehurricanetracker*,  I later changed this to *stormtracker*)
 
@@ -66,7 +66,7 @@ As the project developed it became clear that other libraries could be useful/ne
 
 Install **Anaconda Prompt** from **Anaconda Navigator / Home / Install** menu. It can be opened from the Windows Start menu in the same way as Anaconda Navigator.
 
-![envsetup 3 img](/setupimgs/envsetup3.png)
+![envsetup 3 img](/imgs/setupimgs/envsetup3.png)
 
 In the **Start** menu, you should find a prompt with the same name as your environment name (*stormtracker*).
 
@@ -78,7 +78,7 @@ conda activate stormtracker
 
 Note the environment change in the command line.
 
-![envsetup 4 img](/setupimgs/envsetup4.png)
+![envsetup 4 img](/imgs/setupimgs/envsetup4.png)
 
 ### Github Repository – Part 2
 
@@ -90,27 +90,27 @@ Cloning is like downloading your origin version of the project from GitHub to a 
 Use **Anaconda Prompt** to select the **correct environment** and **navigate to the directory** where you want to **clone** the origin repository on your local machine using `cd filepath`.
 Next type `git clone URL` were *URL* is the weblink to your origin repository and *my folder* is the local drive directory containing your project.
 
-![clone repo 1 img](/setupimgs/clonerepo1.png)
+![clone repo 1 img](/imgs/setupimgs/clonerepo1.png)
 
 ### Manual Installs
 Additional Packages were added including [*matplotlib/](https://matplotlib.org/stable/install/index.html), [*tropycal*](https://anaconda.org/channels/conda-forge/packages/tropycal/overview), [*hurdat2py*](https://pypi.org/project/hurdat2py/0.3.2/ ) and [*geopy*](https://geopy.readthedocs.io/en/stable/#installation).
 Note *hurdat2py* and *geopy* were installed using *pip* rather than directly through *conda*.
 The above packages mainly handle data retrieval, processing, display. Geopy has s useful library to help us write analytical functions.
 
-![manual installs 1 img](/setupimgs/manualinstalls1.png)
+![manual installs 1 img](/imgs/setupimgs/manualinstalls1.png)
 
-![manual installs 2 img](/setupimgs/manualinstalls2.png)
+![manual installs 2 img](/imgs/setupimgs/manualinstalls2.png)
 
-![manual installs 3 img](/setupimgs/manualinstalls3.png)
+![manual installs 3 img](/imgs/setupimgs/manualinstalls3.png)
 
-![manual installs 4 img](/setupimgs/manualinstalls4.png)
+![manual installs 4 img](/imgs/setupimgs/manualinstalls4.png)
 
 ### IDE - PyCharm
 Download the free version of [Pycharm](https://www.jetbrains.com/pycharm/download/?section=windows).
 #### Configuring PyCharm to work with the repository and new environment
 
 Open **Pycharm** From the desktop/**Start** menu or directly from **Anaconda Navigator/Home**. Ensure correct environment (*stormtracker*) is selected.
-![ide pycharm 1 img](/setupimgs/idepycharm1.png)
+![ide pycharm 1 img](/imgs/setupimgs/idepycharm1.png)
 
 From **Menu** select **File / New Project**.
 
@@ -128,23 +128,23 @@ Set the Environment to stormtracker which you previously set up.
 
 Select **Create**.
 
-![ide pycharm 2 img](/setupimgs/idepycharm2.png)
+![ide pycharm 2 img](/imgs/setupimgs/idepycharm2.png)
 
 Select **Create from Existing Sources** if prompted by a new dialog box.
 You should get a similar result as below showing the files in the cloned directory.
 
-![ide pycharm 3 img](/setupimgs/idepycharm3.png)
+![ide pycharm 3 img](/imgs/setupimgs/idepycharm3.png)
 
 #### Configuring PyCharm to run a specific Script
 For Pycharm to run the correct script we need to configure the *Run* button. (`Shift + F10`)
 
 Select **Current File / Edit Configurations** to open the **Run/Debug Configurations** dialog.
 
-![ide pycharm 4 img](/setupimgs/idepycharm4.png)
+![ide pycharm 4 img](/imgs/setupimgs/idepycharm4.png)
 
 Add a new Configuration
 
-![ide pycharm 5 img](/setupimgs/idepycharm5.png)
+![ide pycharm 5 img](/imgs/setupimgs/idepycharm5.png)
 
 Set the following parameters:
     - Select **Python**, 
@@ -155,12 +155,11 @@ Set the following parameters:
 
 It should look similar to the below image.
 
-![ide pycharm 6 img](/setupimgs/idepycharm6.png)
+![ide pycharm 6 img](/imgs/setupimgs/idepycharm6.png)
 
 The **Current File** will change the *stormtracker* script when you select Run instead of the default *main*.
 
-![ide pycharm 7 img](/setupimgs/idepycharm7.png)
-![img_2.png](img_2.png)
+![ide pycharm 7 img](/imgs/setupimgs/idepycharm7.png)
 
 Selecting the green '*Play* button or pressing Alt+F10 on the keyboard will run the code from the stormtracker file.
 
@@ -174,4 +173,8 @@ Ensure you are working in the correct *conda* environment and local file directo
 
 #### Test 1 - Check PyCharm IDE is configured to run *stormtracker* script
 **Status** - PASS
-![ide pycharmconfigtest 1 img](/setupimgs/idepycharmconfigtest1.png)
+![test 1 ide pycharmconfigtest img](/imgs/testimgs/test1_idepycharmconfig.png)
+
+#### Test 2 - Create a simple output map of the Gulf of Mexico
+**Status** - PASS
+![test 2 map display img](/imgs/testimgs/test2_mapdisplay.png)
