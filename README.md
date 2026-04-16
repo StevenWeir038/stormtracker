@@ -208,3 +208,22 @@ gridparams = {'crs': ccrs.PlateCarree(central_longitude=0),
 ```
 
 ![test 3 add gridlines with labels resolved img](/imgs/testimgs/test3_addgridlineswithlabelsresolved.png)
+
+#### Test 4 - Test data connection to hurdat2 database
+**Status** - PASS
+
+Hurdat2 database has been saved to local drive in case.  If data not found search reverts to online database.
+Functionally confirmed as only 2025 storm data retained in local file and "Katrina" storm query is from 2005.
+
+```Python
+import hurdat2py
+
+hd2 = hurdat2py.Hurdat2(r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker.hurdat2data2025.txt")
+
+# Storm object:
+storm = hd2['katrina', 2005]
+
+print(storm.to_dataframe())
+```
+
+![test 4 test data connection to hurdat2 database img](/imgs/testimgs/test4_testhurdat2dataconnection.png)
