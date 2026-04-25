@@ -167,6 +167,29 @@ Alternatively, to run the code in the terminal, type `python stormtracker.py`.
 Ensure you are working in the correct *conda* environment and local file directory in the terminal.
 
 
+## Importing Data and ETL
+It is necessary to process data before it can be displayed any map.
+In this project a csv file was downloaded and processed with FME before being used to create a Pandas Dataframe.
+`Latitude` and `Longitude` dataframe series (columns) were then decimalized to enable the creation 
+of a geodatabase with a geometry field.
+
+### Step 1 - Download csv file from NOAA and prep using FME
+Data was imported in `.csv` format from the HURDAT2 database downloaded from 
+['NOAA / AOML](https://www.aoml.noaa.gov/hrd/hurdat/hurdat2.html) to a local drive location.
+
+FME was used to transform raw data prior to use, keeping the 1st 7 columns of data and stripping blank spaces from each.
+
+To understand data format, refer to the following [document](https://www.aoml.noaa.gov/hrd/hurdat/hurdat2-format.pdf).
+
+- **1st** column = date
+- **2nd** column = time
+- **3rd** column = system category
+- **4th** column = Latitude
+- **5th** column = Longitude
+- **6th** column = Max Sustained Windspeed
+- **7th** column = minimum pressure (millibars)
+
+
 ## Testing
 
 ### Setup and Configuration
