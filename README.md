@@ -189,6 +189,18 @@ To understand data format, refer to the following [document](https://www.aoml.no
 - **6th** column = Max Sustained Windspeed
 - **7th** column = minimum pressure (millibars)
 
+### Step 2 - Open & Read data from downloaded file on local drive
+A simple function was used to read a csv data file locally.
+The filepath in the form of a raw `r-string` was used to reference the location in memory.
+```python
+def importdatafromcsv():
+'''
+Step #2- Open & read data from downloaded file on local drive
+'''
+raw_data = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"
+
+return raw_data
+```
 
 ## Testing
 

@@ -69,9 +69,16 @@ def savefig(fig):
 '''
 Create a blank plt figure instance with axes containing PlateCaree default map projection
 '''
-fig = plt.figure(figsize=(8, 8))  # create a figure of size 8x8 (representing the page size in inches)
+fig = plt.figure(figsize=(8, 11))  # create a figure of size 8x11 (representing the page size in inches)
 ax = plt.axes(projection=proj)  # use a PlateCarre projection in the axes object
 ax = displaymap(ax) # create an axes object in the figure
 savefig(fig)  # save an output file to view
 
 
+def importdatafromcsv():
+'''
+Step #2- Open & read data from downloaded file on local drive
+'''
+raw_data = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"
+
+return raw_data
