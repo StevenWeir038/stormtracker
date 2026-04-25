@@ -202,6 +202,19 @@ raw_data = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtrac
 return raw_data
 ```
 
+### Step 3 - Create a DataFrame object from the imported .csv file
+Importing the Pandas library enables the creation a Pandas Dataframe object.
+Create and assign a dataframe object using the .csv data and display in terminal to review.
+```python
+import pandas as pd
+```
+
+```python
+dataframe = pd.read_csv(raw_data)
+print(dataframe.to_string())
+```
+
+
 ## Testing
 
 ### Setup and Configuration
@@ -243,3 +256,14 @@ gridparams = {'crs': ccrs.PlateCarree(central_longitude=0),
 ```
 
 ![test 3 add gridlines with labels resolved img](/imgs/testimgs/test3_addgridlineswithlabelsresolved.png)
+
+#### Test 4 -  Create a DataFrame object from the imported .csv file
+
+Importing the Pandas library enables the creation a Pandas Dataframe object.
+```python
+dataframe = pd.read_csv(raw_data)
+print(dataframe.to_string())
+```
+
+![test 4 create pandas database from csv file](/imgs/testimgs/test4_createpandasdatabase.png)
+

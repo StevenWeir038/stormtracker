@@ -4,11 +4,12 @@ import matplotlib.pyplot as plt  # the Figure object acts as a container for the
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER  # to display gridlines
 import matplotlib.ticker as mticker  # use to display gridlines
 import numpy as np
+import pandas as pd
 
-
+from main import raw_data
 
 '''
-Global variables [accessible to whole module each time an instance of plt is called]
+GLOBAL VARIABLES [accessible to whole module each time an instance of plt is called]
 '''
 
 # Create a PlateCaree Cartopy projection. Ths is the default projection for displaying lat/long coordinates
@@ -23,8 +24,17 @@ gridparams = {'crs': ccrs.PlateCarree(central_longitude=0),
               'color':'gray', 'alpha':1, 'linestyle':'-'}
 
 '''
-Functions
+FUNCTIONS
 '''
+
+'''
+MAP DISPLAY FUNCTIONS
+'''
+# Create a blank plt figure instance with axes containing PlateCaree default map projection
+fig = plt.figure(figsize=(8, 11))  # create a figure of size 8x11 (representing the page size in inches)
+ax = plt.axes(projection=proj)  # use a PlateCarre projection in the axes object
+ax = displaymap(ax) # create an axes object in the figure
+savefig(fig)  # save an output file to view
 
 def displaymap(ax):
     '''
@@ -67,18 +77,26 @@ def savefig(fig):
 
 
 '''
-Create a blank plt figure instance with axes containing PlateCaree default map projection
+DATA PROCESSING FUNCTIONS
 '''
-fig = plt.figure(figsize=(8, 11))  # create a figure of size 8x11 (representing the page size in inches)
-ax = plt.axes(projection=proj)  # use a PlateCarre projection in the axes object
-ax = displaymap(ax) # create an axes object in the figure
-savefig(fig)  # save an output file to view
-
-
 def importdatafromcsv():
-'''
-Step #2- Open & read data from downloaded file on local drive
-'''
-raw_data = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"
+    '''
+    Step #2- Open & read data from downloaded file on local drive
+    '''
+    raw_data = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"
+    return raw_data
 
-return raw_data
+
+def createdataframefromcsv():
+    '''
+    Step #3 - Create a DataFrame object from csv file:
+    Credit to geeksforgeeks.org at https://www.geeksforgeeks.org/python/creating-a-dataframe-using-csv-files/
+    for guidance creating a dataframe from a csv file.
+    '''
+
+    dataframe = pd.read_csv(raw_data)  # import pandas at top of module
+    print("Step 3 Test - Create Dataframe from raw data file".upper())
+    print("OUTPUT SUCCESSFUL")
+    print(dataframe.to_string())  # test #3 - view sample of dataframe obj in terminal based on csv file on local drive
+
+createdataframefromcsv(raw_data)
