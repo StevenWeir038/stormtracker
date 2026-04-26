@@ -249,3 +249,5 @@ def creategeodataframe(dataframe):
     '''
     geodataframe = gpd.GeoDataFrame(dataframe, geometry=gpd.points_from_xy(dataframe.Longitude, dataframe.Latitude), crs="EPSG:4326")
     print(geodataframe.to_string())  # delete after testing
+
+    return geodataframe
