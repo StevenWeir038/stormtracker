@@ -116,3 +116,18 @@ def datetimeconverter(dataframe):
     dataframe["DateTime"] = pd.to_datetime(dataframe["DateTime"], format="mixed", errors="coerce")
     print("Step 4 Test - Check if string to datetime conversion in col 1 successful")  # delete after testing
     print(f"Data type in Col 1 = {dataframe["DateTime"].dtype}".upper())  # delete after testing
+
+
+def displaydataframe(dataframe):
+    '''
+    Step #5 Iterate through dataframe rows and display latitude and longitude series values on terminal for checking.
+    https://stackoverflow.com/questions/23330654/update-a-dataframe-in-pandas-while-iterating-row-by-row
+    Solution supported by - Mihai Chelaru | https://stackoverflow.com/a/48951427
+    Small dataset that we only want to read and not modify therefore ok to manually iterate
+    using .itertuples() method instead of using .at() method or vectorizing.
+    Credit also to https://www.datacamp.com/tutorial/pandas-iterate-over-rows
+    '''
+    print("Step 5 Test - Check no missing values in lat/long data by displaying on terminal".upper())
+    print("OUTPUT SUCCESSFUL")
+    for row in dataframe.itertuples(index=False):
+        print(f"DateTime = {row.DateTime}, Latitude = {row.Latitude}, Longitude ={row.Longitude}")

@@ -282,3 +282,18 @@ def datatimeconverter(dataframe):
 ```
 
 ![test 5 string to datetime conversion of a pandas data series](/imgs/testimgs/test5_stringtodatetimeconversioninpandasseries.png)
+
+
+#### Test 6 -  Print Latitudes/Longitudes to terminal to check no missing values
+**Status** - RESOLVED
+
+```python
+'''
+Iterate through dataframe rows and display latitude and longitude series values.
+'''
+print("Step 5 Test - Check no missing values in lat/long data by displaying on terminal".upper())
+print("OUTPUT SUCCESSFUL")
+for row in dataframe.itertuples(index=False):
+    print(f"DateTime = {row.DateTime}, Latitude = {row.Latitude}, Longitude ={row.Longitude}")
+```
+![test 6 Iterate through dataframe rows and display latitude and longitude column values](/imgs/testimgs/test6_iteratedataframetocheckseriesvalues.png)
