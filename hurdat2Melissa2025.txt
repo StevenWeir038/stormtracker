@@ -48,4 +48,3 @@ DateTime,Landfall,Category,Latitude,Longitude,Max Sustained Windspeed (mph),Min 
 20251031 18:00, ,EX,40.6N,58.9W,70,972
 20251101 00:00, ,EX,43.7N,56.0W,70,971
 20251101 06:00, ,EX,46.6N,51.3W,65,968
-20251101 06:00, ,EX,46.6S,51.3E,65,968
