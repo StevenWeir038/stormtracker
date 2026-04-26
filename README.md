@@ -167,6 +167,54 @@ Alternatively, to run the code in the terminal, type `python stormtracker.py`.
 Ensure you are working in the correct *conda* environment and local file directory in the terminal.
 
 
+## Importing Data and ETL
+It is necessary to process data before it can be displayed any map.
+In this project a csv file was downloaded and processed with FME before being used to create a Pandas Dataframe.
+`Latitude` and `Longitude` dataframe series (columns) were then decimalized to enable the creation 
+of a geodatabase with a geometry field.
+
+### Step 1 - Download csv file from NOAA and prep using FME
+Data was imported in `.csv` format from the HURDAT2 database downloaded from 
+['NOAA / AOML](https://www.aoml.noaa.gov/hrd/hurdat/hurdat2.html) to a local drive location.
+
+FME was used to transform raw data prior to use, keeping the 1st 7 columns of data and stripping blank spaces from each.
+
+To understand data format, refer to the following [document](https://www.aoml.noaa.gov/hrd/hurdat/hurdat2-format.pdf).
+
+- **1st** column = date
+- **2nd** column = time
+- **3rd** column = system category
+- **4th** column = Latitude
+- **5th** column = Longitude
+- **6th** column = Max Sustained Windspeed
+- **7th** column = minimum pressure (millibars)
+
+### Step 2 - Open & Read data from downloaded file on local drive
+A simple function was used to read a csv data file locally.
+The filepath in the form of a raw `r-string` was used to reference the location in memory.
+```python
+def importdatafromcsv():
+'''
+Step #2- Open & read data from downloaded file on local drive
+'''
+raw_data = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"
+
+return raw_data
+```
+
+### Step 3 - Create a DataFrame object from the imported .csv file
+Importing the Pandas library enables the creation a Pandas Dataframe object.
+Create and assign a dataframe object using the .csv data and display in terminal to review.
+```python
+import pandas as pd
+```
+
+```python
+dataframe = pd.read_csv(raw_data)
+print(dataframe.to_string())
+```
+
+
 ## Testing
 
 ### Setup and Configuration
@@ -209,6 +257,7 @@ gridparams = {'crs': ccrs.PlateCarree(central_longitude=0),
 
 ![test 3 add gridlines with labels resolved img](/imgs/testimgs/test3_addgridlineswithlabelsresolved.png)
 
+<<<<<<< HEAD
 #### Test 4 - Test data connection to hurdat2 database
 **Status** - PASS
 
@@ -227,3 +276,88 @@ print(storm.to_dataframe())
 ```
 
 ![test 4 test data connection to hurdat2 database img](/imgs/testimgs/test4_testhurdat2dataconnection.png)
+=======
+#### Test 4 -  Create a DataFrame object from the imported .csv file
+**Status** - RESOLVED
+
+Importing the Pandas library enables the creation a Pandas Dataframe object.
+```python
+dataframe = pd.read_csv(raw_data)
+print(dataframe.to_string())
+```
+
+![test 4 create pandas database from csv file](/imgs/testimgs/test4_createpandasdatabase.png)
+
+#### Test 5 -  Convert DateTime series in column 1 from string to datetime format
+**Status** - RESOLVED
+
+```python
+def datatimeconverter(dataframe):
+    '''
+    Convert DateTime series in column 1 from string to datetime format to demonstrate programmatic steps.
+    '''
+    dataframe["DateTime"] = pd.to_datetime(dataframe["DateTime"], format="mixed", errors="coerce")
+    print("Step 4 Test - Check if string to datetime conversion in col 1 successful")  # delete after testing
+    print(f"Data type in Col 1 = {dataframe["DateTime"].dtype}".upper())  # delete after testing
+```
+
+![test 5 string to datetime conversion of a pandas data series](/imgs/testimgs/test5_stringtodatetimeconversioninpandasseries.png)
+
+
+#### Test 6 -  Print Latitudes/Longitudes to terminal to check no missing values
+**Status** - RESOLVED
+
+```python
+'''
+Iterate through dataframe rows and display latitude and longitude series values.
+'''
+print("Step 5 Test - Check no missing values in lat/long data by displaying on terminal".upper())
+print("OUTPUT SUCCESSFUL")
+for row in dataframe.itertuples(index=False):
+    print(f"DateTime = {row.DateTime}, Latitude = {row.Latitude}, Longitude ={row.Longitude}")
+```
+![test 6 Iterate through dataframe rows and display latitude and longitude column values](/imgs/testimgs/test6_iteratedataframetocheckseriesvalues.png)
+
+#### Test 7 -  Parse & Decimalise Latitude/Longitude series values and update dataframe
+**Status** - RESOLVED
+For N/S/E/W coordinates check:
+
+1. input value is a string
+2. display input value to check
+3. interim value used in loop is a list
+4. display interim value to check
+5. output interim value is a string as has last index character removed and minus added before 1st index if `S` or `W`. 
+6. display output value
+7. display updated value in the series after parsing commas
+
+**North Coordinates**
+
+![test 7a latitude parser north coordinates](/imgs/testimgs/test7a_latitudeparsernorthcoordinates.png)
+
+**South Coordinates**
+
+![test 7b latitude parser south coordinates](/imgs/testimgs/test7b_latitudeparsersouthcoordinates.png)
+
+**East Coordinates**
+
+![test 7clatitude parser east coordinates](/imgs/testimgs/test7c_latitudeparsereastcoordinates.png)
+
+**West Coordinates**
+
+![test 7d latitude parser west coordinates](/imgs/testimgs/test7d_latitudeparserwestcoordinates.png)
+
+#### Test 8 -  Convert Pandas Dataframe to GeoPandas Dataframe by adding a geometry series using decimalised Lats/Longs
+**Status** - RESOLVED
+```python
+geodataframe = gpd.GeoDataFrame(
+    dataframe, geometry=gpd.points_from_xy(dataframe.Longitude, dataframe.Latitude), crs="EPSG:4326")
+print(geodataframe.to_string())
+```
+**Before**
+
+![test 8a](/imgs/testimgs/test8a_pandasdataframestructurecomplete.png)
+
+**After**
+
+![test 8b](/imgs/testimgs/test8b_geopandasgeodataframestructurecomplete.png)
+>>>>>>> geodatabase
