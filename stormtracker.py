@@ -92,7 +92,7 @@ def importdatafromcsv():
     return raw_data
 
 
-def createdataframefromcsv():
+def createdataframefromcsv(rawdata):
     '''
     Step #3 - Create a DataFrame object from csv file:
     Credit to geeksforgeeks.org at https://www.geeksforgeeks.org/python/creating-a-dataframe-using-csv-files/
@@ -131,3 +131,110 @@ def displaydataframe(dataframe):
     print("OUTPUT SUCCESSFUL")
     for row in dataframe.itertuples(index=False):
         print(f"DateTime = {row.DateTime}, Latitude = {row.Latitude}, Longitude ={row.Longitude}")
+
+
+def latitudelongitudeparser(dataframe):
+    '''
+    Iterate through dataframe and decimalise Latitude series values
+    Convert value from string to list to access indexes
+    If last index value contains "S" for South, remove letter in last index and add "-" before the 1st index value
+    Convert result back to a string and remove commas
+
+    '''
+    print ("Step 6 Test - Remove N/S values, decimalize S coordinates -".upper())  # delete after testing
+    print("OUTPUT SUCCESSFUL")  # delete after testing
+
+    for i in dataframe.index:  # loop to iterate through rows in pandas dataframe
+        # set local variables INSIDE loop for north, south and minus vals & reference the location of each iterable object
+        north = "N"
+        south = "S"
+        minus = "-"
+        raw_lat_val = dataframe.at[i, "Latitude"]
+        raw_long_val = dataframe.at[i, "Longitude"]
+
+        # iterate and change latitude values
+        if len(raw_lat_val) >= 5 and raw_lat_val[-1] == north:  # recheck there are at least 5 char programmatically
+            print(f"raw_lat_val type = {type(raw_lat_val)}")  # delete after testing
+            print(f"raw_lat_val = {raw_lat_val}")  # delete after testing
+            interim_lat_val = list(raw_lat_val)
+            print(f"interim_lat_val type = {type(interim_lat_val)}")  # delete after testing
+            print(f"interim_lat_val (NORTH) before changing = {interim_lat_val}")  # delete after testing
+            interim_lat_val.pop()  # remove the letter value in 4th index
+            dec_lat_val = ",".join(str(x.replace(",", "")) for x in interim_lat_val)  # use list comprehension to convert
+
+            print(f"interim_lat_val (NORTH) after changing = {interim_lat_val}")  # delete after testing
+            print(f"dec_lat_val type = {type(dec_lat_val)}")  # delete after testing
+            # list to string, nest .replace() to remove "," in string
+            dataframe.at[i, "Latitude"] = dec_lat_val.replace(",", "")
+            print(f"dec_lat_val (NORTH) = {dec_lat_val}")  # delete after testing
+            print(f"updated dataframe.at[i, \"Latitude\"] value = {dataframe.at[i, "Latitude"]}")  # delete after testing
+            print("===")  # delete after testing
+
+        elif len(raw_lat_val) >= 5 and raw_lat_val[-1] == south:  # recheck there are at least 5 char programmatically:
+            print(f"raw_lat_val = {raw_lat_val}")  # delete after testing
+            interim_lat_val = list(raw_lat_val)
+            print(f"interim_lat_val type = {type(interim_lat_val)}")  # delete after testing
+            print(f"interim_lat_val (SOUTH) before changing = {interim_lat_val}")  # delete after testing
+            interim_lat_val.pop()  # remove value in 4th index
+            interim_lat_val.insert(0, minus)  # insert minus before 1st index
+            dec_lat_val = ",".join(str(x.replace(",", "")) for x in interim_lat_val) # use list comprehension to convert
+
+            print(f"interim_lat_val (SOUTH) after changing = {interim_lat_val}")  # delete after testing
+            print(f"dec_lat_val type = {type(dec_lat_val)}")  # delete after testing
+            # list to string, nest .replace() to remove "," in string
+            dataframe.at[i, "Latitude"] = dec_lat_val.replace(",", "")
+            print(f"updated dataframe.at[i, \"Latitude\"] value = {dataframe.at[i, "Latitude"]}")  # delete after testing
+            print("===")  # delete after testing
+
+            print(f"interim_lat_val (SOUTH) after changing = {interim_lat_val}")  # delete after testing
+            print(f"dec_lat_val (SOUTH) = {dec_lat_val}")  # delete after testing
+            print("===")  # delete after testing
+
+            # iterate and change longitude values
+            if len(raw_long_val) >= 5 and raw_long_val[-1] == north:  # recheck there are at least 5 char programmatically
+                print(f"raw_long_val type = {type(raw_long_val)}")  # delete after testing
+                print(f"raw_long_val = {raw_long_val}")  # delete after testing
+                interim_long_val = list(raw_long_val)
+                print(f"interim_long_val type = {type(interim_long_val)}")  # delete after testing
+                print(f"interim_long_val (NORTH) before changing = {interim_long_val}")  # delete after testing
+                interim_long_val.pop()  # remove the letter value in 4th index
+                dec_long_val = ",".join(
+                    str(x.replace(",", "")) for x in interim_long_val)  # use list comprehension to convert
+
+                print(f"interim_long_val (NORTH) after changing = {interim_long_val}")  # delete after testing
+                print(f"dec_long_val type = {type(dec_long_val)}")  # delete after testing
+                # list to string, nest .replace() to remove "," in string
+                dataframe.at[i, "longitude"] = dec_long_val.replace(",", "")
+                print(f"dec_long_val (NORTH) = {dec_long_val}")  # delete after testing
+                print(
+                    f"updated dataframe.at[i, \"longitude\"] value = {dataframe.at[i, "longitude"]}")  # delete after testing
+                print("===")  # delete after testing
+
+            elif len(raw_long_val) >= 5 and raw_long_val[
+                -1] == south:  # recheck there are at least  5 char programmatically:
+                print(f"raw_long_val = {raw_long_val}")  # delete after testing
+                interim_long_val = list(raw_long_val)
+                print(f"interim_long_val type = {type(interim_long_val)}")  # delete after testing
+                print(f"interim_long_val (SOUTH) before changing = {interim_long_val}")  # delete after testing
+                interim_long_val.pop()  # remove value in 4th index
+                interim_long_val.insert(0, minus)  # insert minus before 1st index
+                dec_long_val = ",".join(
+                    str(x.replace(",", "")) for x in interim_long_val)  # use list comprehension to convert
+
+                print(f"interim_long_val (SOUTH) after changing = {interim_long_val}")  # delete after testing
+                print(f"dec_long_val type = {type(dec_long_val)}")  # delete after testing
+                # list to string, nest .replace() to remove "," in string
+                dataframe.at[i, "longitude"] = dec_long_val.replace(",", "")
+                print(
+                    f"updated dataframe.at[i, \"longitude\"] value = {dataframe.at[i, "longitude"]}")  # delete after testing
+                print("===")  # delete after testing
+
+                print(f"interim_long_val (SOUTH) after changing = {interim_long_val}")  # delete after testing
+                print(f"dec_long_val (SOUTH) = {dec_long_val}")  # delete after testing
+                print("===")  # delete after testing
+
+    print("Print Dataframe after updating Latitude & Longitude values".upper())  # delete after testing
+    pd.set_option('display.max_columns', None)  # view entire dataframe in terminal | delete after testing
+    print(dataframe.to_string())  # delete after testing
+
+    return dataframe

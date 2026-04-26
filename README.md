@@ -297,3 +297,31 @@ for row in dataframe.itertuples(index=False):
     print(f"DateTime = {row.DateTime}, Latitude = {row.Latitude}, Longitude ={row.Longitude}")
 ```
 ![test 6 Iterate through dataframe rows and display latitude and longitude column values](/imgs/testimgs/test6_iteratedataframetocheckseriesvalues.png)
+
+#### Test 7 -  Parse & Decimalise Latitude/Longitude series values and update dataframe
+**Status** - RESOLVED
+For N/S/E/W coordinates check:
+
+1. input value is a string
+2. display input value to check
+3. interim value used in loop is a list
+4. display interim value to check
+5. output interim value is a string as has last index character removed and minus added before 1st index if `S` or `W`. 
+6. display output value
+7. display updated value in the series after parsing commas
+
+**North Coordinates**
+
+![test 7a latitude parser north coordinates](/imgs/testimgs/test7a_latitudeparsernorthcoordinates.png)
+
+**South Coordinates**
+
+![test 7b latitude parser south coordinates](/imgs/testimgs/test7b_latitudeparsersouthcoordinates.png)
+
+**East Coordinates**
+
+![test 7clatitude parser east coordinates](/imgs/testimgs/test7c_latitudeparsereastcoordinates.png)
+
+**West Coordinates**
+
+![test 7d latitude parser west coordinates](/imgs/testimgs/test7d_latitudeparserwestcoordinates.png)
