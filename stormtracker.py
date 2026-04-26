@@ -238,3 +238,17 @@ def latitudelongitudeparser(dataframe):
     print(dataframe.to_string())  # delete after testing
 
     return dataframe
+
+
+'''
+Step #7 Create a geo-dataframe (gdf) from dataframe so points can be displayed on a map
+Create geometry column in gdf object from Lat/Long dataframe columns
+Credit to GeoPandas documentation at https://geopandas.org/en/stable/gallery/create_geopandas_from_pandas.html
+for guidance creating a GeoPandas geo-dataframe from a Pandas dataframe.
+'''
+print ("PRINT GEODATAFRAME AFTER UPDATING LATITUDE & LONGITUDE VALUES".upper())  # delete after testing
+print("OUTPUT SUCCESSFUL")  # delete after testing
+
+# Create and view gdf to confirm geometry column constructed
+geodataframe = gpd.GeoDataFrame(dataframe, geometry=gpd.points_from_xy(dataframe.Longitude, dataframe.Latitude), crs="EPSG:4326")
+print(geodataframe.to_string())  # delete after testing

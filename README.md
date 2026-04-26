@@ -325,3 +325,18 @@ For N/S/E/W coordinates check:
 **West Coordinates**
 
 ![test 7d latitude parser west coordinates](/imgs/testimgs/test7d_latitudeparserwestcoordinates.png)
+
+#### Test 8 -  Convert Pandas Dataframe to GeoPandas Dataframe by adding a geometry series using decimalised Lats/Longs
+**Status** - RESOLVED
+```python
+geodataframe = gpd.GeoDataFrame(
+    dataframe, geometry=gpd.points_from_xy(dataframe.Longitude, dataframe.Latitude), crs="EPSG:4326")
+print(geodataframe.to_string())
+```
+**Before**
+
+![test 8a](/imgs/testimgs/test8a_pandasdataframestructurecomplete.png)
+
+**After**
+
+![test 8b](/imgs/testimgs/test8b_geopandasgeodataframestructurecomplete.png)
