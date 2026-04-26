@@ -6,7 +6,12 @@ import matplotlib.ticker as mticker  # use to display gridlines
 import numpy as np
 import pandas as pd
 
-from main import raw_data
+
+'''
+RAW DATA SOURCE
+'''
+raw_data = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"  # file loc
+
 
 '''
 GLOBAL VARIABLES [accessible to whole module each time an instance of plt is called]
@@ -98,5 +103,16 @@ def createdataframefromcsv():
     print("Step 3 Test - Create Dataframe from raw data file".upper())
     print("OUTPUT SUCCESSFUL")
     print(dataframe.to_string())  # test #3 - view sample of dataframe obj in terminal based on csv file on local drive
+    return dataframe  # make dataframe available to other functions
 
-createdataframefromcsv(raw_data)
+
+def datetimeconverter(dataframe):
+    '''
+    Convert DateTime series in column 1 from string to datetime format. Note, this could have been done with
+    ETL software before step 1 but I wanted to demonstrate this could be done programmatically.
+    https://stackoverflow.com/questions/32204631/how-to-convert-string-to-datetime-format-in-pandas
+    Solution supported by - rad15f | Source - https://stackoverflow.com/a/77848930
+    '''
+    dataframe["DateTime"] = pd.to_datetime(dataframe["DateTime"], format="mixed", errors="coerce")
+    print("Step 4 Test - Check if string to datetime conversion in col 1 successful")  # delete after testing
+    print(f"Data type in Col 1 = {dataframe["DateTime"].dtype}".upper())  # delete after testing

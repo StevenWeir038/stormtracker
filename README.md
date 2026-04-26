@@ -258,6 +258,7 @@ gridparams = {'crs': ccrs.PlateCarree(central_longitude=0),
 ![test 3 add gridlines with labels resolved img](/imgs/testimgs/test3_addgridlineswithlabelsresolved.png)
 
 #### Test 4 -  Create a DataFrame object from the imported .csv file
+**Status** - RESOLVED
 
 Importing the Pandas library enables the creation a Pandas Dataframe object.
 ```python
@@ -267,3 +268,17 @@ print(dataframe.to_string())
 
 ![test 4 create pandas database from csv file](/imgs/testimgs/test4_createpandasdatabase.png)
 
+#### Test 5 -  Convert DateTime series in column 1 from string to datetime format
+**Status** - RESOLVED
+
+```python
+def datatimeconverter(dataframe):
+    '''
+    Convert DateTime series in column 1 from string to datetime format to demonstrate programmatic steps.
+    '''
+    dataframe["DateTime"] = pd.to_datetime(dataframe["DateTime"], format="mixed", errors="coerce")
+    print("Step 4 Test - Check if string to datetime conversion in col 1 successful")  # delete after testing
+    print(f"Data type in Col 1 = {dataframe["DateTime"].dtype}".upper())  # delete after testing
+```
+
+![test 5 string to datetime conversion of a pandas data series](/imgs/testimgs/test5_stringtodatetimeconversioninpandasseries.png)
