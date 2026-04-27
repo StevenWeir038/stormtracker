@@ -2,6 +2,7 @@ import cartopy.crs as ccrs  # Provides library to display an unprojected (lat/lo
 import cartopy.feature as cfeature # Gives access to border/color features
 import matplotlib.pyplot as plt  # the Figure object acts as a container for the display output
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER  # to display gridlines
+from matplotlib_map_utils.core.north_arrow import north_arrow  # used to draw north arrow
 import matplotlib.ticker as mticker  # use to display gridlines
 import pandas as pd
 import geopandas as gpd
@@ -20,7 +21,7 @@ DATA PROCESSING FUNCTIONS
 '''
 def importdatafromcsv():
     '''
-    Step #2- Open & read data from downloaded file on local drive
+    Read data from downloaded file on local drive
     '''
     raw_data = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"
     return raw_data
@@ -170,8 +171,19 @@ def displaymap():
     # Add title to map
     ax.title.set_text('Storm Track Map \n Gulf of Mexico')
 
+    # add and customise north arrow
+    # Credit moss_xyz - https://stackoverflow.com/a/79346562
+    north_arrow(
+        ax,
+        location="upper left",
+        rotation={"crs": proj, "reference": "center"},
+        shadow=False,
+        scale=0.4,
+        label={"position": "bottom", "text": "N", "fontsize": 10},
+    )
+
     # save the figure to a .png image
-    #fig.savefig('stormtrackermap.png', bbox_inches='tight', dpi=300)
+    #image = fig.savefig('stormtrackermap.png', bbox_inches='tight', dpi=300)
 
 
     # Show plot in Pycharm without figure disappearing off-screen
@@ -180,7 +192,7 @@ def displaymap():
     plt.interactive(False)
 
     # return instance of map for use in matplotlib axes object
-    return fig
+    return image
 
 
 '''

@@ -360,4 +360,18 @@ print(geodataframe.to_string())
 **After**
 
 ![test 8b](/imgs/testimgs/test8b_geopandasgeodataframestructurecomplete.png)
->>>>>>> geodatabase
+
+#### Test 9 -  Add a customised north arrow
+**Status** - RESOLVED
+```python
+    north_arrow(
+        ax,
+        location="upper left",
+        rotation={"crs": proj, "reference": "center"},
+        shadow=False,
+        scale=0.4,
+        label={"position": "bottom", "text": "N", "fontsize": 10},
+    )
+```
+
+![test 9](/imgs/testimgs/test9_addnortharrow.png)
