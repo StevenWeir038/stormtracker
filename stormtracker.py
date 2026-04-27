@@ -14,28 +14,21 @@ import numpy as np
 GLOBAL VARIABLES [accessible to whole module each time an instance of plt is called]
 '''
 #data source
-raw_data = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"
+datasource = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"
 
 
 '''
 DATA PROCESSING FUNCTIONS
 '''
-def importdatafromcsv():
-    '''
-    Read data from downloaded file on local drive
-    '''
-    raw_data = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"
-    return raw_data
 
-
-def createdataframefromcsv(rawdata):
+def createdataframefromcsv(datasource):
     '''
-    Step #3 - Create a DataFrame object from csv file:
+    Create a DataFrame object from csv file:
     Credit to geeksforgeeks.org at https://www.geeksforgeeks.org/python/creating-a-dataframe-using-csv-files/
     for guidance creating a dataframe from a csv file.
     '''
 
-    dataframe = pd.read_csv(raw_data)
+    dataframe = pd.read_csv(datasource)
     return dataframe
 
 
@@ -48,8 +41,10 @@ def datetimeconverter(dataframe):
     '''
     dataframe["DateTime"] = pd.to_datetime(dataframe["DateTime"], format="mixed", errors="coerce")
 
+    return updated_dataframe
 
-def displaydataframe(dataframe):
+
+def displaydataframe(updated_dataframe):
     '''
     Iterate through dataframe rows and display latitude and longitude series values on terminal for checking.
     https://stackoverflow.com/questions/23330654/update-a-dataframe-in-pandas-while-iterating-row-by-row
@@ -63,7 +58,7 @@ def displaydataframe(dataframe):
         print(f"DateTime = {row.DateTime}, Latitude = {row.Latitude}, Longitude ={row.Longitude}")
 
 
-def latitudelongitudeparser(dataframe):
+def latitudelongitudeparser(updated_dataframe):
     '''
     Iterate through dataframe and decimalise Latitude series values
     Convert value from string to list to access indexes
@@ -109,10 +104,10 @@ def latitudelongitudeparser(dataframe):
                     str(x.replace(",", "")) for x in interim_long_val)  # convert using list comprehension
                 dataframe.at[i, "longitude"] = dec_long_val.replace(",", "")   # remove "," from string
 
-    return dataframe
+    return finished_dataframe
 
 
-def creategeodataframe(dataframe):
+def creategeodataframe(finished_dataframe):
     '''
     Create a geo-dataframe (gdf) from dataframe so points can be displayed on a map
     Create geometry column in gdf object from Lat/Long dataframe columns
@@ -123,7 +118,7 @@ def creategeodataframe(dataframe):
         dataframe,
         geometry=gpd.points_from_xy(dataframe.Longitude, dataframe.Latitude),
         crs="EPSG:4326")
-    print(geodataframe.to_string())  # delete after testing
+    print(geodataframe.to_string())  # show geodataframe in terminal
 
     return geodataframe
 
@@ -216,5 +211,23 @@ def displaymap():
 '''
 CALL FUNCTIONS
 '''
-displaymap()
-savefig(image)
+
+def main():
+    '''
+    Call functions in correct order to read file and display map
+    '''
+    # variables
+    dataframe = createdataframefromcsv(datasource)
+    updated_dataframe = datetimeconverter(dataframe)
+    finished_dataframe = latitudelongitudeparser(updated_dataframe)
+    geodataframe = gpd.read_file(finished_dataframe)
+
+    #functions
+    createdataframefromcsv(datasource)
+    datetimeconverter(dataframe)
+    displaydataframe(updated_dataframe)
+    latitudelongitudeparser(updated_dataframe)
+    creategeodataframe(finished_dataframe)
+
+    displaymap()
+    savefig(image)
