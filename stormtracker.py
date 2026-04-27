@@ -3,32 +3,16 @@ import cartopy.feature as cfeature # Gives access to border/colour features
 import matplotlib.pyplot as plt  # the Figure object acts as a container for the display output
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER  # to display gridlines
 import matplotlib.ticker as mticker  # use to display gridlines
-import numpy as np
 import pandas as pd
-
-import hurdat2py
-import datetime as dt
-
-hd2 = hurdat2py.Hurdat2(r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker.hurdat2data2025.txt")
-
-# Storm object:
-storm = hd2['katrina', 2005]
-
-print(storm.to_dataframe())
-# storm.plot()  # can this function be emulated on own map...
-
-'''
-RAW DATA SOURCE
-'''
-raw_data = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"  # file loc
+import geopandas as gpd
+import numpy as np
 
 
 '''
 GLOBAL VARIABLES [accessible to whole module each time an instance of plt is called]
 '''
-
-# Create a PlateCaree Cartopy projection. Ths is the default projection for displaying lat/long coordinates
-proj = ccrs.PlateCarree()
+#data source
+raw_data = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"
 
 # Define dictionary to set grid parameters for display on stormtracker map.
 # CREDIT to https://python.nicolasbarrier.fr/maps/carto.html
@@ -36,7 +20,7 @@ proj = ccrs.PlateCarree()
 #give gridlines same projection.  Set grid style parameters
 gridparams = {'crs': ccrs.PlateCarree(central_longitude=0),
               'draw_labels':True, 'linewidth':0.25,
-              'color':'gray', 'alpha':1, 'linestyle':'-'}
+              'color':'gray', 'alpha':1, 'linestyle':'--'}
 
 '''
 FUNCTIONS
@@ -45,17 +29,22 @@ FUNCTIONS
 '''
 MAP DISPLAY FUNCTIONS
 '''
-# Create a blank plt figure instance with axes containing PlateCaree default map projection
-fig = plt.figure(figsize=(8, 11))  # create a figure of size 8x11 (representing the page size in inches)
-ax = plt.axes(projection=proj)  # use a PlateCarre projection in the axes object
-ax = displaymap(ax) # create an axes object in the figure
-savefig(fig)  # save an output file to view
+def savefig(fig):
+    '''
+    Save the figure as stormtrackermap.png with a dpi of 300
+    '''
+    fig.savefig('stormtrackermap.png', bbox_inches='tight', dpi=300)
 
-def displaymap(ax):
+
+def displaymap(gridparams):
     '''
     Render same map boundary, fill and extent values and gridlines to an instance of plt.axes
     '''
+    proj = ccrs.PlateCarree()
+    # create a figure of size 8x11 (representing the page size in inches)
+    # Create a blank plt figure instance with axes containing PlateCaree default map projection
 
+    fig, ax = plt.subplots(1,1, figsize=(8, 11), projection=proj)
     # Add coastlines and US state boundaries for users spatial context
     ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.5, edgecolor='gray')
     ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=1.0, edgecolor='black')
@@ -74,21 +63,22 @@ def displaymap(ax):
     gl.xformatter = LONGITUDE_FORMATTER
     gl.yformatter = LATITUDE_FORMATTER
 
-    #Add title to map
-    ax.title.set_text('Hurricane Track Map | Gulf of Mexico')
-
     # Set extent to Gulf Coast
     ax.set_extent([-100, -60, 17, 37], proj)  # long min, long max, lat min, lat max boundary coordinate values
 
+    # Add title to map
+    ax.title.set_text('Hurricane Track Map | Gulf of Mexico')
+
+    plt.show()
+    savefig(fig)  # save the figure to a .png image
+
+    # Show plot in Pycharm without figure disappearing off-screen
+    # Source - https://stackoverflow.com/a/46225722, Posted by tairen
+    plt.show(block=True)
+    plt.interactive(False)
+
     # return instance of map for use in matplotlib axes object
-    return ax
-
-
-def savefig(fig):
-    '''
-    Save the figure as stormtrackermap.png with a dpi of 300
-    '''
-    fig.savefig('stormtrackermap.png', bbox_inches='tight', dpi=300)
+    return fig, ax
 
 
 '''
@@ -109,11 +99,8 @@ def createdataframefromcsv(rawdata):
     for guidance creating a dataframe from a csv file.
     '''
 
-    dataframe = pd.read_csv(raw_data)  # import pandas at top of module
-    print("Step 3 Test - Create Dataframe from raw data file".upper())
-    print("OUTPUT SUCCESSFUL")
-    print(dataframe.to_string())  # test #3 - view sample of dataframe obj in terminal based on csv file on local drive
-    return dataframe  # make dataframe available to other functions
+    dataframe = pd.read_csv(raw_data)
+    return dataframe
 
 
 def datetimeconverter(dataframe):
@@ -124,8 +111,6 @@ def datetimeconverter(dataframe):
     Solution supported by - rad15f | Source - https://stackoverflow.com/a/77848930
     '''
     dataframe["DateTime"] = pd.to_datetime(dataframe["DateTime"], format="mixed", errors="coerce")
-    print("Step 4 Test - Check if string to datetime conversion in col 1 successful")  # delete after testing
-    print(f"Data type in Col 1 = {dataframe["DateTime"].dtype}".upper())  # delete after testing
 
 
 def displaydataframe(dataframe):
@@ -137,8 +122,7 @@ def displaydataframe(dataframe):
     using .itertuples() method instead of using .at() method or vectorizing.
     Credit also to https://www.datacamp.com/tutorial/pandas-iterate-over-rows
     '''
-    print("Step 5 Test - Check no missing values in lat/long data by displaying on terminal".upper())
-    print("OUTPUT SUCCESSFUL")
+    print("Check no missing values in lat/long data by displaying on terminal".upper())
     for row in dataframe.itertuples(index=False):
         print(f"DateTime = {row.DateTime}, Latitude = {row.Latitude}, Longitude ={row.Longitude}")
 
@@ -149,13 +133,9 @@ def latitudelongitudeparser(dataframe):
     Convert value from string to list to access indexes
     If last index value contains "S" for South, remove letter in last index and add "-" before the 1st index value
     Convert result back to a string and remove commas
-
     '''
-    print ("Step 6 Test - Remove N/S values, decimalize S coordinates -".upper())  # delete after testing
-    print("OUTPUT SUCCESSFUL")  # delete after testing
-
     for i in dataframe.index:  # loop to iterate through rows in pandas dataframe
-        # set local variables INSIDE loop for north, south and minus vals & reference the location of each iterable object
+        # set local variables INSIDE loop for north, south and minus vals & ref the location of each iterable object
         north = "N"
         south = "S"
         minus = "-"
@@ -163,89 +143,35 @@ def latitudelongitudeparser(dataframe):
         raw_long_val = dataframe.at[i, "Longitude"]
 
         # iterate and change latitude values
-        if len(raw_lat_val) >= 5 and raw_lat_val[-1] == north:  # recheck there are at least 5 char programmatically
-            print(f"raw_lat_val type = {type(raw_lat_val)}")  # delete after testing
-            print(f"raw_lat_val = {raw_lat_val}")  # delete after testing
+        if len(raw_lat_val) >= 5 and raw_lat_val[-1] == north:  # recheck there are at least 5 chars
+
             interim_lat_val = list(raw_lat_val)
-            print(f"interim_lat_val type = {type(interim_lat_val)}")  # delete after testing
-            print(f"interim_lat_val (NORTH) before changing = {interim_lat_val}")  # delete after testing
             interim_lat_val.pop()  # remove the letter value in 4th index
-            dec_lat_val = ",".join(str(x.replace(",", "")) for x in interim_lat_val)  # use list comprehension to convert
+            dec_lat_val = ",".join(str(x.replace(",", "")) for x in interim_lat_val)  # convert using list comprehension
+            dataframe.at[i, "Latitude"] = dec_lat_val.replace(",", "")  # remove "," from string
 
-            print(f"interim_lat_val (NORTH) after changing = {interim_lat_val}")  # delete after testing
-            print(f"dec_lat_val type = {type(dec_lat_val)}")  # delete after testing
-            # list to string, nest .replace() to remove "," in string
-            dataframe.at[i, "Latitude"] = dec_lat_val.replace(",", "")
-            print(f"dec_lat_val (NORTH) = {dec_lat_val}")  # delete after testing
-            print(f"updated dataframe.at[i, \"Latitude\"] value = {dataframe.at[i, "Latitude"]}")  # delete after testing
-            print("===")  # delete after testing
-
-        elif len(raw_lat_val) >= 5 and raw_lat_val[-1] == south:  # recheck there are at least 5 char programmatically:
-            print(f"raw_lat_val = {raw_lat_val}")  # delete after testing
+        elif len(raw_lat_val) >= 5 and raw_lat_val[-1] == south:  # recheck there are at least 5 chars
             interim_lat_val = list(raw_lat_val)
-            print(f"interim_lat_val type = {type(interim_lat_val)}")  # delete after testing
-            print(f"interim_lat_val (SOUTH) before changing = {interim_lat_val}")  # delete after testing
             interim_lat_val.pop()  # remove value in 4th index
             interim_lat_val.insert(0, minus)  # insert minus before 1st index
-            dec_lat_val = ",".join(str(x.replace(",", "")) for x in interim_lat_val) # use list comprehension to convert
-
-            print(f"interim_lat_val (SOUTH) after changing = {interim_lat_val}")  # delete after testing
-            print(f"dec_lat_val type = {type(dec_lat_val)}")  # delete after testing
-            # list to string, nest .replace() to remove "," in string
-            dataframe.at[i, "Latitude"] = dec_lat_val.replace(",", "")
-            print(f"updated dataframe.at[i, \"Latitude\"] value = {dataframe.at[i, "Latitude"]}")  # delete after testing
-            print("===")  # delete after testing
-
-            print(f"interim_lat_val (SOUTH) after changing = {interim_lat_val}")  # delete after testing
-            print(f"dec_lat_val (SOUTH) = {dec_lat_val}")  # delete after testing
-            print("===")  # delete after testing
+            dec_lat_val = ",".join(str(x.replace(",", "")) for x in interim_lat_val)  # convert using list comprehension
+            dataframe.at[i, "Latitude"] = dec_lat_val.replace(",", "")  # remove "," from string
 
             # iterate and change longitude values
-            if len(raw_long_val) >= 5 and raw_long_val[-1] == north:  # recheck there are at least 5 char programmatically
-                print(f"raw_long_val type = {type(raw_long_val)}")  # delete after testing
-                print(f"raw_long_val = {raw_long_val}")  # delete after testing
+            if len(raw_long_val) >= 5 and raw_long_val[-1] == north:  # recheck there are at least 5 chars
                 interim_long_val = list(raw_long_val)
-                print(f"interim_long_val type = {type(interim_long_val)}")  # delete after testing
-                print(f"interim_long_val (NORTH) before changing = {interim_long_val}")  # delete after testing
                 interim_long_val.pop()  # remove the letter value in 4th index
                 dec_long_val = ",".join(
-                    str(x.replace(",", "")) for x in interim_long_val)  # use list comprehension to convert
+                    str(x.replace(",", "")) for x in interim_long_val)  # convert using list comprehension
+                dataframe.at[i, "longitude"] = dec_long_val.replace(",", "")  # remove "," from string
 
-                print(f"interim_long_val (NORTH) after changing = {interim_long_val}")  # delete after testing
-                print(f"dec_long_val type = {type(dec_long_val)}")  # delete after testing
-                # list to string, nest .replace() to remove "," in string
-                dataframe.at[i, "longitude"] = dec_long_val.replace(",", "")
-                print(f"dec_long_val (NORTH) = {dec_long_val}")  # delete after testing
-                print(
-                    f"updated dataframe.at[i, \"longitude\"] value = {dataframe.at[i, "longitude"]}")  # delete after testing
-                print("===")  # delete after testing
-
-            elif len(raw_long_val) >= 5 and raw_long_val[
-                -1] == south:  # recheck there are at least  5 char programmatically:
-                print(f"raw_long_val = {raw_long_val}")  # delete after testing
+            elif len(raw_long_val) >= 5 and raw_long_val[-1] == south:  # recheck there are at least  5 chars
                 interim_long_val = list(raw_long_val)
-                print(f"interim_long_val type = {type(interim_long_val)}")  # delete after testing
-                print(f"interim_long_val (SOUTH) before changing = {interim_long_val}")  # delete after testing
                 interim_long_val.pop()  # remove value in 4th index
                 interim_long_val.insert(0, minus)  # insert minus before 1st index
                 dec_long_val = ",".join(
-                    str(x.replace(",", "")) for x in interim_long_val)  # use list comprehension to convert
-
-                print(f"interim_long_val (SOUTH) after changing = {interim_long_val}")  # delete after testing
-                print(f"dec_long_val type = {type(dec_long_val)}")  # delete after testing
-                # list to string, nest .replace() to remove "," in string
-                dataframe.at[i, "longitude"] = dec_long_val.replace(",", "")
-                print(
-                    f"updated dataframe.at[i, \"longitude\"] value = {dataframe.at[i, "longitude"]}")  # delete after testing
-                print("===")  # delete after testing
-
-                print(f"interim_long_val (SOUTH) after changing = {interim_long_val}")  # delete after testing
-                print(f"dec_long_val (SOUTH) = {dec_long_val}")  # delete after testing
-                print("===")  # delete after testing
-
-    print("Print Dataframe after updating Latitude & Longitude values".upper())  # delete after testing
-    pd.set_option('display.max_columns', None)  # view entire dataframe in terminal | delete after testing
-    print(dataframe.to_string())  # delete after testing
+                    str(x.replace(",", "")) for x in interim_long_val)  # convert using list comprehension
+                dataframe.at[i, "longitude"] = dec_long_val.replace(",", "")   # remove "," from string
 
     return dataframe
 
@@ -257,7 +183,10 @@ def creategeodataframe(dataframe):
     Credit to GeoPandas documentation at https://geopandas.org/en/stable/gallery/create_geopandas_from_pandas.html
     for guidance creating a GeoPandas geo-dataframe from a Pandas dataframe.
     '''
-    geodataframe = gpd.GeoDataFrame(dataframe, geometry=gpd.points_from_xy(dataframe.Longitude, dataframe.Latitude), crs="EPSG:4326")
+    geodataframe = gpd.GeoDataFrame(
+        dataframe,
+        geometry=gpd.points_from_xy(dataframe.Longitude, dataframe.Latitude),
+        crs="EPSG:4326")
     print(geodataframe.to_string())  # delete after testing
 
     return geodataframe
