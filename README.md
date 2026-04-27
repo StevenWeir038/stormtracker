@@ -374,4 +374,22 @@ print(geodataframe.to_string())
     )
 ```
 
-![test 9](/imgs/testimgs/test9_addnortharrow.png)
+![test 9 add north arrow to map](/imgs/testimgs/test9_addnortharrow.png)
+
+#### Test 10 -  Add a simple scalebar to the map
+**Status** - RESOLVED
+```python
+    scale_bar = ScaleBar(
+        111e3,  # e3 to display as km
+        "m",
+        location="lower left",
+        label="Approx\n Scale",
+        label_loc="left",
+        scale_loc="bottom",
+        color="black",
+        font_properties={"family": "sans-serif", "size": 10}
+    )
+    ax.add_artist(scale_bar)
+```
+
+![test 10 add simple scalebar to map](/imgs/testimgs/test10_addsimplescalebar.png)

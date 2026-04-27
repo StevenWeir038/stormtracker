@@ -3,6 +3,7 @@ import cartopy.feature as cfeature # Gives access to border/color features
 import matplotlib.pyplot as plt  # the Figure object acts as a container for the display output
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER  # to display gridlines
 from matplotlib_map_utils.core.north_arrow import north_arrow  # used to draw north arrow
+from matplotlib_scalebar.scalebar import ScaleBar  # used to draw scalebar
 import matplotlib.ticker as mticker  # use to display gridlines
 import pandas as pd
 import geopandas as gpd
@@ -130,7 +131,7 @@ def creategeodataframe(dataframe):
 '''
 MAP DISPLAY FUNCTIONS
 '''
-def savefig():
+def savefig(image):
     '''
     Save the figure as stormtrackermap.png with a dpi of 300
     '''
@@ -182,8 +183,25 @@ def displaymap():
         label={"position": "bottom", "text": "N", "fontsize": 10},
     )
 
+    # add a simple scalebar
+    # For PlateCarree (degrees), dx is usually the size of 1 meter in degrees.
+    # Approximately 111km per degree at equator, changes with latitude.
+    # Using a local conversion factor is safer.
+    scale_bar = ScaleBar(
+        111e3,  # e3 to display as km
+        "m",
+        location="lower left",
+        label="Approx\n Scale",
+        label_loc="left",
+        scale_loc="bottom",
+        color="black",
+        font_properties={"family": "sans-serif", "size": 10}
+    )
+    ax.add_artist(scale_bar)
+
+
     # save the figure to a .png image
-    #image = fig.savefig('stormtrackermap.png', bbox_inches='tight', dpi=300)
+    image = fig.savefig('stormtrackermap.png', bbox_inches='tight', dpi=300)
 
 
     # Show plot in Pycharm without figure disappearing off-screen
@@ -191,7 +209,7 @@ def displaymap():
     plt.show(block=True)
     plt.interactive(False)
 
-    # return instance of map for use in matplotlib axes object
+    # return image of map to pass to savefig function
     return image
 
 
@@ -199,3 +217,4 @@ def displaymap():
 CALL FUNCTIONS
 '''
 displaymap()
+savefig(image)
