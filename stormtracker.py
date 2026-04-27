@@ -1,5 +1,5 @@
 import cartopy.crs as ccrs  # Provides library to display an unprojected (lat/lon) map in a matplotlib axes
-import cartopy.feature as cfeature # Gives access to border/colour features
+import cartopy.feature as cfeature # Gives access to border/color features
 import matplotlib.pyplot as plt  # the Figure object acts as a container for the display output
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER  # to display gridlines
 import matplotlib.ticker as mticker  # use to display gridlines
@@ -13,72 +13,6 @@ GLOBAL VARIABLES [accessible to whole module each time an instance of plt is cal
 '''
 #data source
 raw_data = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"
-
-# Define dictionary to set grid parameters for display on stormtracker map.
-# CREDIT to https://python.nicolasbarrier.fr/maps/carto.html
-
-#give gridlines same projection.  Set grid style parameters
-gridparams = {'crs': ccrs.PlateCarree(central_longitude=0),
-              'draw_labels':True, 'linewidth':0.25,
-              'color':'gray', 'alpha':1, 'linestyle':'--'}
-
-'''
-FUNCTIONS
-'''
-
-'''
-MAP DISPLAY FUNCTIONS
-'''
-def savefig(fig):
-    '''
-    Save the figure as stormtrackermap.png with a dpi of 300
-    '''
-    fig.savefig('stormtrackermap.png', bbox_inches='tight', dpi=300)
-
-
-def displaymap(gridparams):
-    '''
-    Render same map boundary, fill and extent values and gridlines to an instance of plt.axes
-    '''
-    proj = ccrs.PlateCarree()
-    # create a figure of size 8x11 (representing the page size in inches)
-    # Create a blank plt figure instance with axes containing PlateCaree default map projection
-
-    fig, ax = plt.subplots(1,1, figsize=(8, 11), projection=proj)
-    # Add coastlines and US state boundaries for users spatial context
-    ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.5, edgecolor='gray')
-    ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=1.0, edgecolor='black')
-    ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=1.0, edgecolor='black')
-
-    # Add a light green land and blue sea colour to map for readability
-    ax.add_feature(cfeature.LAND.with_scale('50m'), linewidth=0.5, facecolor='#a5e987', edgecolor='face')
-    ax.add_feature(cfeature.OCEAN.with_scale('50m'), linewidth=0.5, facecolor='#74ccf4', edgecolor='face')
-
-    # Add bespoke gridlines to map
-    gl = ax.gridlines(**gridparams)
-    gl.top_labels = False  # turn off x labels on top of axes
-    gl.right_labels = False  # turn off y labels on right of axes
-    gl.xlocator = mticker.FixedLocator(np.arange(-180, 180 + 40, 10))
-    gl.ylocator = mticker.FixedLocator(np.arange(-90, 90 + 10, 10))
-    gl.xformatter = LONGITUDE_FORMATTER
-    gl.yformatter = LATITUDE_FORMATTER
-
-    # Set extent to Gulf Coast
-    ax.set_extent([-100, -60, 17, 37], proj)  # long min, long max, lat min, lat max boundary coordinate values
-
-    # Add title to map
-    ax.title.set_text('Hurricane Track Map | Gulf of Mexico')
-
-    plt.show()
-    savefig(fig)  # save the figure to a .png image
-
-    # Show plot in Pycharm without figure disappearing off-screen
-    # Source - https://stackoverflow.com/a/46225722, Posted by tairen
-    plt.show(block=True)
-    plt.interactive(False)
-
-    # return instance of map for use in matplotlib axes object
-    return fig, ax
 
 
 '''
@@ -115,7 +49,7 @@ def datetimeconverter(dataframe):
 
 def displaydataframe(dataframe):
     '''
-    Step #5 Iterate through dataframe rows and display latitude and longitude series values on terminal for checking.
+    Iterate through dataframe rows and display latitude and longitude series values on terminal for checking.
     https://stackoverflow.com/questions/23330654/update-a-dataframe-in-pandas-while-iterating-row-by-row
     Solution supported by - Mihai Chelaru | https://stackoverflow.com/a/48951427
     Small dataset that we only want to read and not modify therefore ok to manually iterate
@@ -190,3 +124,66 @@ def creategeodataframe(dataframe):
     print(geodataframe.to_string())  # delete after testing
 
     return geodataframe
+
+
+'''
+MAP DISPLAY FUNCTIONS
+'''
+def savefig():
+    '''
+    Save the figure as stormtrackermap.png with a dpi of 300
+    '''
+    fig.savefig('stormtrackermap1.png', bbox_inches='tight', dpi=300)
+
+
+def displaymap():
+    '''
+    Render a map of the Gulf of Mexico
+    '''
+    proj= ccrs.PlateCarree()
+    # create a figure of size 8x11 (representing the page size in inches)
+    # Create a blank plt figure instance with axes containing PlateCaree default map projection
+
+    fig, ax = plt.subplots(1,1, figsize=(8, 11), subplot_kw=dict(projection=proj))
+    # Add coastlines and US state boundaries for users spatial context
+    ax.add_feature(cfeature.STATES.with_scale('50m'), linewidth=0.5, edgecolor='gray')
+    ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth=1.0, edgecolor='black')
+    ax.add_feature(cfeature.COASTLINE.with_scale('50m'), linewidth=1.0, edgecolor='black')
+
+    # Add a light green land and blue sea colour to map for readability
+    ax.add_feature(cfeature.LAND.with_scale('50m'), linewidth=0.5, facecolor='#a5e987', edgecolor='face')
+    ax.add_feature(cfeature.OCEAN.with_scale('50m'), linewidth=0.5, facecolor='#74ccf4', edgecolor='face')
+
+    # Add bespoke gridlines to map
+    gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,)
+    gl.top_labels = False  # turn off x labels on top of axes
+    gl.right_labels = False  # turn off y labels on right of axes
+    gl.xlocator = mticker.FixedLocator(np.arange(-180, 180 + 40, 10))
+    gl.ylocator = mticker.FixedLocator(np.arange(-90, 90 + 10, 10))
+    gl.xformatter = LONGITUDE_FORMATTER
+    gl.yformatter = LATITUDE_FORMATTER
+
+
+    # Set extent to Gulf Coast
+    ax.set_extent([-100, -60, 17, 37], crs=proj)  # long min, long max, lat min, lat max boundary coordinate values
+
+    # Add title to map
+    ax.title.set_text('Storm Track Map \n Gulf of Mexico')
+
+    # save the figure to a .png image
+    #fig.savefig('stormtrackermap.png', bbox_inches='tight', dpi=300)
+
+
+    # Show plot in Pycharm without figure disappearing off-screen
+    # Source - https://stackoverflow.com/a/46225722, Posted by tairen
+    plt.show(block=True)
+    plt.interactive(False)
+
+    # return instance of map for use in matplotlib axes object
+    return fig
+
+
+'''
+CALL FUNCTIONS
+'''
+displaymap()
