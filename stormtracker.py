@@ -119,6 +119,10 @@ def creategeodataframe(finished_dataframe):
         geometry=gpd.points_from_xy(dataframe.Longitude, dataframe.Latitude),
         crs="EPSG:4326")
     print(geodataframe.to_string())  # show geodataframe in terminal
+    geodataframe.to_file(
+        filename=r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.gdb",
+        layer="temptable", driver="OpenFileGDB"
+    )
 
     return geodataframe
 
@@ -236,7 +240,7 @@ def main():
     createdataframefromcsv(dataframe)
     datetimeconverter(updated_dataframe)
     displaydataframe(updated_dataframe)
-    latitudelongitudeparser(finished_dataframe)
-    creategeodataframe(geodataframe)
+    latitudelongitudeparser(updated_dataframe)
+    creategeodataframe(finished_dataframe)
     displaymap(geodataframe)
     savefig(image)

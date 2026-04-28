@@ -394,7 +394,7 @@ print(geodataframe.to_string())
 
 ![test 10 add simple scalebar to map](/imgs/testimgs/test10_addsimplescalebar.png)
 
-#### Test 10 -  Add a stormtrack and legend to the map
+#### Test 11 -  Add a stormtrack and legend to the map
 **Status** - RESOLVED
 ```python
     # display track data
@@ -409,3 +409,13 @@ print(geodataframe.to_string())
     )
 ```
 ![test 11 add stormtrack and legend to map](/imgs/testimgs/test11_addstormtrackandlegend.png)
+
+#### Test 12 -  Save geodataframe data to a local file directory
+**Status** - RESOLVED
+```python
+geodataframe.to_file(
+    filename=r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.gdb",
+    layer="temptable", driver="OpenFileGDB"
+)
+```
+![test 12 save geodataframe to a local file directory](/imgs/testimgs/test12_savegeodataframetofile.png)
