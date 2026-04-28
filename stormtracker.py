@@ -118,6 +118,7 @@ def creategeodataframe(finished_dataframe):
         dataframe,
         geometry=gpd.points_from_xy(dataframe.Longitude, dataframe.Latitude),
         crs="EPSG:4326")
+    geodataframe = geodataframe.to_crs(32167)  # apply projection so data can be measured
     print(geodataframe.to_string())  # show geodataframe in terminal
     geodataframe.to_file(
         filename=r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.gdb",

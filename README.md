@@ -419,3 +419,21 @@ geodataframe.to_file(
 )
 ```
 ![test 12 save geodataframe to a local file directory](/imgs/testimgs/test12_savegeodataframetofile.png)
+
+
+#### Test 13 -  Give geodataframe an EPSG:32167 projection to enable distance calcuations
+**Status** - RESOLVED
+```python
+## GEODATAFRAME GEOMETRY CONVERSION
+# Geodataframe before conversion to a projected CRS
+print(type(geodataframe["geometry"]))
+print(f"Before projected transform applied \n {geodataframe.to_string()}")  # check - length series should be zero as coordinates only, not a projection
+
+# Geodataframe before conversion to a projected CRS
+# For WGS84 projection use 4326 otherwise try 32167 USA - 84°W to 78°W and GoM OCS
+# https://epsg.org/search/by-name?sessionkey=12hfi43nz1&searchedTerms=gulf+of+mex#crs
+geodataframe = geodataframe.to_crs(32167)
+print(f"After projected transform applied \n {geodataframe.to_string()}")
+```
+
+![test 13 save geodataframe an epsg 32167 projection](/imgs/testimgs/test13_geodataframegeometryappliedprojection.png)
