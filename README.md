@@ -393,3 +393,19 @@ print(geodataframe.to_string())
 ```
 
 ![test 10 add simple scalebar to map](/imgs/testimgs/test10_addsimplescalebar.png)
+
+#### Test 10 -  Add a stormtrack and legend to the map
+**Status** - RESOLVED
+```python
+    # display track data
+    ax.plot(
+        geodataframe.geometry.x,
+        geodataframe.geometry.y,
+        '-o',
+        color="y",
+        ms=4,
+        label="Track",
+        transform=ccrs.PlateCarree()
+    )
+```
+![test 11 add stormtrack and legend to map](/imgs/testimgs/test11_addstormtrackandlegend.png)

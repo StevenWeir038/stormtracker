@@ -133,7 +133,7 @@ def savefig(image):
     fig.savefig('stormtrackermap1.png', bbox_inches='tight', dpi=300)
 
 
-def displaymap():
+def displaymap(geodataframe):
     '''
     Render a map of the Gulf of Mexico
     '''
@@ -160,9 +160,19 @@ def displaymap():
     gl.xformatter = LONGITUDE_FORMATTER
     gl.yformatter = LATITUDE_FORMATTER
 
-
     # Set extent to Gulf Coast
     ax.set_extent([-100, -60, 17, 37], crs=proj)  # long min, long max, lat min, lat max boundary coordinate values
+
+    # display track data
+    ax.plot(
+        geodataframe.geometry.x,
+        geodataframe.geometry.y,
+        '-o',
+        color="y",
+        ms=4,
+        label="Track",
+        transform=ccrs.PlateCarree()
+    )
 
     # Add title to map
     ax.title.set_text('Storm Track Map \n Gulf of Mexico')
@@ -219,15 +229,14 @@ def main():
     # variables
     dataframe = createdataframefromcsv(datasource)
     updated_dataframe = datetimeconverter(dataframe)
-    finished_dataframe = latitudelongitudeparser(updated_dataframe)
-    geodataframe = gpd.read_file(finished_dataframe)
+    finished_dataframe = latitudelongitudeparser(finished_dataframe)
+    geodataframe = creategeodataframe(geodataframe)
 
     #functions
-    createdataframefromcsv(datasource)
-    datetimeconverter(dataframe)
+    createdataframefromcsv(dataframe)
+    datetimeconverter(updated_dataframe)
     displaydataframe(updated_dataframe)
-    latitudelongitudeparser(updated_dataframe)
-    creategeodataframe(finished_dataframe)
-
-    displaymap()
+    latitudelongitudeparser(finished_dataframe)
+    creategeodataframe(geodataframe)
+    displaymap(geodataframe)
     savefig(image)
