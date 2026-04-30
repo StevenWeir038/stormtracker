@@ -437,3 +437,13 @@ print(f"After projected transform applied \n {geodataframe.to_string()}")
 ```
 
 ![test 13 save geodataframe an epsg 32167 projection](/imgs/testimgs/test13_geodataframegeometryappliedprojection.png)
+
+#### Test 14 -  Add a length series to the geodataframe
+**Status** - RESOLVED
+
+*Note lengths are expected to be 0 as it is currently based of 1 dimensional point data*.
+```python
+geodataframe["Length (km)"] = geodataframe.geometry.length / 1000
+```
+
+![test 14 Add length series to the geodataframe](/imgs/testimgs/test14_addlenghtseriestogeodataframe.png)
