@@ -7,20 +7,22 @@ from matplotlib_scalebar.scalebar import ScaleBar  # used to draw scalebar
 import matplotlib.ticker as mticker  # use to display gridlines
 import pandas as pd
 import geopandas as gpd
-import numpy as np
+import numpy as np  # use to display gridlines
+from shapely.geometry import LineString  # req for reprojecting geographic geometry values from degrees to metres
 
 
 '''
 GLOBAL VARIABLES [accessible to whole module each time an instance of plt is called]
 '''
+
 # data source
 datasource = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"
+
 
 '''
 DATA PROCESSING FUNCTIONS
 REWORKED - as creating dataframe is done once, no need to break different stages of build down to separate functions
 '''
-
 
 def createGeodataframe(datasource):
     '''
@@ -193,13 +195,15 @@ def createGeodataframe(datasource):
     geodataframe = gpd.GeoDataFrame(
         dataframe,
         geometry=gpd.points_from_xy(dataframe.Longitude, dataframe.Latitude),
-        crs="EPSG:4326")  # create a geodataframe with degrees coordinates
+        crs="EPSG:4326"
+    )  # create a geodataframe with degrees coordinates
 
     # Use below link to find best fit projection (USA - 84°W to 78°W and GoM OCS) for measuring.
     # https://epsg.org/crs_32167/NAD83-BLM-17N-ftUS.html?sessionkey=kuqo0ksxvxapply
     geodataframe = geodataframe.to_crs(32167)
 
-    geodataframe["Length (km)"] = geodataframe.geometry.length / 1000  # add a length series to geodataframe
+    # add a length series to geodataframe.
+    # geodataframe["Length (km)"] = geodataframe.geometry.length / 1000  # WRONG APPROACH
     print(geodataframe.to_string())  # show geodataframe in terminal
     geodataframe.to_file(
         filename=r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.gdb",
@@ -210,7 +214,7 @@ def createGeodataframe(datasource):
     '''
     STEP 6
     PURPOSE
-    Convert Point Geometries to Linestrings with GeoPandas
+    Convert Point Geometries from GeoPandas geodatabase to Linestring using shapely 
 
     CREDIT
     Stack Overflow https://stackoverflow.com/questions/66492804/convert-point-geometries-to-linestrings-with-geopandas
@@ -219,6 +223,7 @@ def createGeodataframe(datasource):
     Using the Geopandas points_from_xy function, create a Linestring from Longitude and Latitude series' from dataframe
 
     EXPECTED OUTPUT
+    A LineString which is actually a list of tuples which can then be passed to displaymap function and plotted to axes.
     
     '''
     # create a linestring object in the geodatabase from a sequence of POINT coordinates
@@ -233,23 +238,42 @@ def createGeodataframe(datasource):
     print(f"Length of 'stormtrack' object= {stormtrack.length}.")  # test to check length before projection transform
     stormtracklist = stormtrack.coords  # converts the coordinate sequence to a list of tuples if using outside Pandas
 
-
-    return stormtrack, stormtracklist  # make stormtrack and stormtracklist objects available to other functions
+    # make geodataframe, stormtrack and stormtracklist objects available to other functions
+    return geodataframe, stormtrack, stormtracklist
 
 
 '''
 MAP DISPLAY FUNCTIONS
 '''
+
 def saveFig(image):
     '''
+    PURPOSE
     Save the figure as stormtrackermap.png with a dpi of 300
+
+    INPUT PARAMETERS
+    Variable named "image" passed from displaymap() function
+
+    EXPECTED OUTPUTS
+    Writes a png file to the local drive for external use
     '''
     fig.savefig('stormtrackermap1.png', bbox_inches='tight', dpi=300)
 
 
-def displayMap(geodataframe):
+def displayMap(geodataframe, stormtrack):
     '''
-    Render a map of the Gulf of Mexico
+    PURPOSE
+    Render a tailored map of the Gulf of Mexico showing path of Storm Melissa (2025)
+
+    INPUT PARAMETERS
+    'geodataframe' and 'stormtrack' data created in createGeodataframe(datasource) function where datasource is
+    a csv file of observations for Hurricane Melissa (2025)
+
+    EXPECTED OUTPUTS
+    A formatted map of GoM with plotted data showing path of Storm Melissa (2025).
+    Map is intuitively colored for land and sea with a PlateCaree projection since data is in degrees.
+    It also contains gridlines, north arrow, scalebar, legend and a title.
+
     '''
     proj= ccrs.PlateCarree()
     # create a figure of size 8x11 (representing the page size in inches)
@@ -278,15 +302,10 @@ def displayMap(geodataframe):
     ax.set_extent([-100, -60, 17, 37], crs=proj)  # long min, long max, lat min, lat max boundary coordinate values
 
     # display track data
-    ax.plot(
-        geodataframe.geometry.x,
-        geodataframe.geometry.y,
-        '-o',
-        color="y",
-        ms=4,
-        label="Track",
-        transform=ccrs.PlateCarree()
-    )
+    #create a new object to hold passed stormtrack object from geodataframe.
+    stormtrack_gdf = gpd.GeoDataFrame(geodataframe,  crs='espg:4326', geometry=stormtrack.geometry)
+    ax1 = stormtrack_gdf.plot(style='-o',color="y",ms=4,label="Track",)  # save display parameters to variable
+    ax.plot(ax1)  # plot to LineString to axis using preset variables
 
     # Add title to map
     ax.title.set_text('Storm Track Map \n Gulf of Mexico')
@@ -335,16 +354,17 @@ def displayMap(geodataframe):
 '''
 CALL FUNCTIONS
 '''
+geodataframe = createGeodataframe(datasource)
 # create empty instance of storm track list object
-stormtrack = []
+stormtracklist = []
 
 def main():
     '''
     Call functions in correct order to read file and display map with plotted geodataframe data.
     '''
-    #functions
     createGeodataframe(datasource)
     displaymap(stormtrack)
     savefig(image)
 
+# run application
 main()
