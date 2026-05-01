@@ -232,7 +232,10 @@ def createGeodataframe(datasource):
     # https://gis.stackexchange.com/questions/238533/extracting-points-from-linestring-or-polygon-and-making-dictionary-out-of-them-i
     # https://shapely.readthedocs.io/en/latest/reference/shapely.LineString.html
 
-    points = gpd.points_from_xy(dataframe.Longitude, dataframe.Latitude)  # create a list of points from the dataframe
+    # DEBUGGING - length will be calculated in degrees with below code.
+    # Need to parse geometry series from geodataframe with transformed projection for calcuations in metres
+    points = gpd.points_from_xy(
+        geodataframe.Longitude, geodataframe.Latitude)  # create a list of points from the dataframe
     stormtrack = LineString(points)  # create a LineString object named stormtrack from the points
 
     print(f"Length of 'stormtrack' object= {stormtrack.length}.")  # test to check length before projection transform

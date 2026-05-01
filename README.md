@@ -453,6 +453,7 @@ geodataframe["Length (km)"] = geodataframe.geometry.length / 1000
 On review this approach isn't going to work.
 As the aim is to measure the distance a storm travels an alternative solution is needed.
 A proven solution is to use a *'LineString'* from the *'shapely'* library.
+Ned to use data parsed from transformed geometry series to calculate lenghts in meters instead of degrees. 
 
 #### Test 15 -  create a linestring object in the geodatabase from a sequence of POINT coordinates
 **Status** - RESOLVED
