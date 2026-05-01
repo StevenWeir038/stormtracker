@@ -1,3 +1,5 @@
+from shapely.geometry.linestring import LineString
+
 # stormtracker
 
 ## Setup & Installation
@@ -447,3 +449,19 @@ geodataframe["Length (km)"] = geodataframe.geometry.length / 1000
 ```
 
 ![test 14 Add length series to the geodataframe](/imgs/testimgs/test14_addlenghtseriestogeodataframe.png)
+
+On review this approach isn't going to work.
+As the aim is to measure the distance a storm travels an alternative solution is needed.
+A proven solution is to use a *'LineString'* from the *'shapely'* library.
+
+#### Test 15 -  create a linestring object in the geodatabase from a sequence of POINT coordinates
+**Status** - RESOLVED
+```python
+    points = gpd.points_from_xy(dataframe.Longitude, dataframe.Latitude)  # create a list of points from the dataframe
+    stormtrack = LineString(points)  # create a LineString from the points
+    stormtracklist = stormtrack.coords  # converts the coordinate sequence to a list of tuples if using outside Pandas
+
+    return stormtrack, stormtracklist  # make stormtrack and stormtracklist objects available to other functions
+```
+
+![test 15 Create a LineString object from coordinate points](/imgs/testimgs/test15_createlinestringobjectfrompointcoordinates.png)

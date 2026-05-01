@@ -13,133 +13,241 @@ import numpy as np
 '''
 GLOBAL VARIABLES [accessible to whole module each time an instance of plt is called]
 '''
-#data source
+# data source
 datasource = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"
-
 
 '''
 DATA PROCESSING FUNCTIONS
+REWORKED - as creating dataframe is done once, no need to break different stages of build down to separate functions
 '''
 
-def createdataframefromcsv(datasource):
-    '''
-    Create a DataFrame object from csv file:
-    Credit to geeksforgeeks.org at https://www.geeksforgeeks.org/python/creating-a-dataframe-using-csv-files/
-    for guidance creating a dataframe from a csv file.
-    '''
 
+def createGeodataframe(datasource):
+    '''
+    # STEP 1
+    PURPOSE
+    Load data into a table from a delimited text file.
+    Create a Pandas DataFrame object to hold tabular data read from a delimited .csv file from the local drive:
+
+    CREDIT
+    geeksforgeeks.org at https://www.geeksforgeeks.org/python/creating-a-dataframe-using-csv-files/ for guidance
+    creating a dataframe from a csv file.
+
+    INPUT PARAMETERS
+    'datasource' setup as a global variable accessible to any function in the module. 'datasource' parameter is a
+    'raw string' which is passed into the function. This tells pandas library where to read file.
+
+
+    EXPECTED OUTPUT
+    A new instance of a Pandas dataframe object named 'dataframe' containing data read from .csv file.
+    '''
     dataframe = pd.read_csv(datasource)
-    return dataframe
 
-
-def datetimeconverter(dataframe):
     '''
-    Convert DateTime series in column 1 from string to datetime format. Note, this could have been done with
-    ETL software before step 1 but I wanted to demonstrate this could be done programmatically.
+    # STEP 2
+    PURPOSE
+    Convert datetime series in column 1 from 'string' to 'datetime' format.
+    Note, this could have been done with ETL software before step 1 though I wanted to demonstrate this can be done 
+    programmatically.
+    
+    CREDIT
     https://stackoverflow.com/questions/32204631/how-to-convert-string-to-datetime-format-in-pandas
     Solution supported by - rad15f | Source - https://stackoverflow.com/a/77848930
+    
+    INPUT PARAMETERS
+    dataframe["DateTime"] series
+    
+    EXPECTED OUTPUT
+    Text value is converted into a datetime value. Whilst displayed as a string, it is stored as a datetime number
     '''
     dataframe["DateTime"] = pd.to_datetime(dataframe["DateTime"], format="mixed", errors="coerce")
+    print(f"Data type in Col 1 = {dataframe["DateTime"].dtype}".upper())  # check data format of updated datetime series
 
-    return updated_dataframe
 
-
-def displaydataframe(updated_dataframe):
     '''
-    Iterate through dataframe rows and display latitude and longitude series values on terminal for checking.
+    STEP 3
+    PURPOSE
+    Display 'dataframe' in terminal to allow manual checking for missing/extraneous data.
+    Then iterate through dataframe rows and display datetime, latitude and longitude series values 
+    for closer inspection.
+    Note, this is a read only operation to support human readability and has no impact on changing dataframe values.
+    
+    CREDIT
+    Solution supported by - Mihai Chelaru | https://stackoverflow.com/a/48951427 and 
     https://stackoverflow.com/questions/23330654/update-a-dataframe-in-pandas-while-iterating-row-by-row
-    Solution supported by - Mihai Chelaru | https://stackoverflow.com/a/48951427
-    Small dataset that we only want to read and not modify therefore ok to manually iterate
-    using .itertuples() method instead of using .at() method or vectorizing.
-    Credit also to https://www.datacamp.com/tutorial/pandas-iterate-over-rows
+    https://www.datacamp.com/tutorial/pandas-iterate-over-rows
+    
+    INPUT PARAMETERS
+    'dataframe' object
+    
+    EXPECTED OUTPUT
+    Whole 'dataframe' is displayed in terminal using .string() instead of .head() method. 
+    Don't want to see ellispes as need to review whole table. 
+    Note, as dataset is small dataset it is acceptable to manually iterate using .itertuples() method. 
+    On larger tables seek to use a vectorised solution.
     '''
-    print("Check no missing values in lat/long data by displaying on terminal".upper())
-    for row in dataframe.itertuples(index=False):
-        print(f"DateTime = {row.DateTime}, Latitude = {row.Latitude}, Longitude ={row.Longitude}")
+    print("Dataframe Output".upper())
+    print(dataframe.to_string())
+
+    print("Alternative View. \n"
+          "Check no missing values in lat/long data by displaying on terminal".upper())
+    for row in dataframe.itertuples(index=False):  # iterate each row of data
+        print(f"DateTime = {row.DateTime}, Latitude = {row.Latitude}, Longitude ={row.Longitude}")  # print tgt series
 
 
-def latitudelongitudeparser(updated_dataframe):
     '''
-    Iterate through dataframe and decimalise Latitude series values
-    Convert value from string to list to access indexes
-    If last index value contains "S" for South, remove letter in last index and add "-" before the 1st index value
-    Convert result back to a string and remove commas
+    STEP #4
+    PURPOSE
+    Iterate through 'dataframe' and decimalise 'Latitude' and 'Longitude' series values.
+    Decimalised values enable creation of a geometry series in a yet to be created 'geodataframe' object based of the 
+    existing dataframe object.  See inline comments for detailed logic.
+    
+    CREDIT
+    freecodecamp.org at https://www.freecodecamp.org/news/python-list-to-string-how-to-convert-lists-in-python
+    
+    INPUT PARAMETERS
+    'local' variables storing 'NESW-' values that are accessed by the inner loop when decimalising string values in 
+    dataframe["Latitude"} and dataframe["Longitude"] series.
+    
+    EXPECTED OUTPUT
+    Decimalised values for each row in dataframe["Latitude"} and dataframe["Longitude"] series. 
+    Letter on last index of each 'tabular cell' is removed and a minus has been inserted before the first index of 
+    Southern and Western hemisphere coordinates.
+    Decimalised value replaces the raw value.
+    
+    Note, degrees run from 180 to 0 to -180 degrees.
+    Text string for lats/longs <100 degrees = 5 characters.
+    Text string for lats/longs <100 degrees = 6 characters.
+    To verify if data is correct there must be at least 5 characters.
+    Use a try/else statement within loop to improve error handling in future development.
+    
+    Note below, a good example of the pros of AI for improving efficiency and readability using list comprehension. 
+    Solution not used in project as logic should be human derived for assessment. 
+    AI was able to support more concise, pythonic solution shown below.  Ca. 30 lines of code compressed into 2!
+    
+    dataframe["Latitude"] = dataframe["Latitude"].apply(lambda x: -float(x.strip("W")) if "W" in x else float(x.strip("E")))
+    dataframe["Longitude"] = dataframe["Longitude"].apply(lambda x: -float(x.strip("N")) if "N" in x else float(x.strip("S")))
     '''
     for i in dataframe.index:  # loop to iterate through rows in pandas dataframe
+
         # set local variables INSIDE loop for north, south and minus vals & ref the location of each iterable object
-        north = "N"
-        south = "S"
-        minus = "-"
-        raw_lat_val = dataframe.at[i, "Latitude"]
-        raw_long_val = dataframe.at[i, "Longitude"]
+        north = "N"  # north string variable
+        south = "S"  # south string variable
+        east = "E"  # east string variable
+        west = "W"  # west string variable
+        minus = "-"  # minus string variable
+        raw_lat_val = dataframe.at[i, "Latitude"]  # location of 'Latitude' iterable
+        raw_long_val = dataframe.at[i, "Longitude"]  # location of 'Longitude' iterable
 
-        # iterate and change latitude values
-        if len(raw_lat_val) >= 5 and raw_lat_val[-1] == north:  # recheck there are at least 5 chars
+        # iterate and update latitude values
+        if len(raw_lat_val) >= 5 and raw_lat_val[-1] == north:  # Programmatically check there are at least 5 chars
 
-            interim_lat_val = list(raw_lat_val)
+            interim_lat_val = list(raw_lat_val) # convert 'cell' value to list to manipulate indices within string
             interim_lat_val.pop()  # remove the letter value in 4th index
-            dec_lat_val = ",".join(str(x.replace(",", "")) for x in interim_lat_val)  # convert using list comprehension
-            dataframe.at[i, "Latitude"] = dec_lat_val.replace(",", "")  # remove "," from string
+            dec_lat_val = ",".join(str(x.replace(",", "")) for x in interim_lat_val)  # convert to str using list comp
+            dataframe.at[i, "Latitude"] = dec_lat_val.replace(",", "")  # remove "," from string on iterables
 
-        elif len(raw_lat_val) >= 5 and raw_lat_val[-1] == south:  # recheck there are at least 5 chars
-            interim_lat_val = list(raw_lat_val)
+        elif len(raw_lat_val) >= 5 and raw_lat_val[-1] == south:  # Programmatically check there are at least 5 chars
+
+            interim_lat_val = list(raw_lat_val) # convert 'cell' value to list to manipulate indices within string
             interim_lat_val.pop()  # remove value in 4th index
-            interim_lat_val.insert(0, minus)  # insert minus before 1st index
-            dec_lat_val = ",".join(str(x.replace(",", "")) for x in interim_lat_val)  # convert using list comprehension
-            dataframe.at[i, "Latitude"] = dec_lat_val.replace(",", "")  # remove "," from string
+            interim_lat_val.insert(0, minus)  # insert minus before 1st index (for S not N values)
+            dec_lat_val = ",".join(str(x.replace(",", "")) for x in interim_lat_val)  # convert to str using list comp
+            dataframe.at[i, "Latitude"] = dec_lat_val.replace(",", "")  # remove "," from string on iterables
 
-            # iterate and change longitude values
-            if len(raw_long_val) >= 5 and raw_long_val[-1] == north:  # recheck there are at least 5 chars
-                interim_long_val = list(raw_long_val)
-                interim_long_val.pop()  # remove the letter value in 4th index
-                dec_long_val = ",".join(
-                    str(x.replace(",", "")) for x in interim_long_val)  # convert using list comprehension
-                dataframe.at[i, "longitude"] = dec_long_val.replace(",", "")  # remove "," from string
+        # iterate and update longitude values
+        if len(raw_long_val) >= 5 and raw_long_val[-1] == east:  # Programmatically check there are at least 5 chars
 
-            elif len(raw_long_val) >= 5 and raw_long_val[-1] == south:  # recheck there are at least  5 chars
-                interim_long_val = list(raw_long_val)
-                interim_long_val.pop()  # remove value in 4th index
-                interim_long_val.insert(0, minus)  # insert minus before 1st index
-                dec_long_val = ",".join(
-                    str(x.replace(",", "")) for x in interim_long_val)  # convert using list comprehension
-                dataframe.at[i, "longitude"] = dec_long_val.replace(",", "")   # remove "," from string
+            interim_long_val = list(raw_long_val) # convert 'cell' value to list to manipulate indices within string
+            interim_long_val.pop()  # remove the letter value in 4th index
+            dec_long_val = ",".join(
+                str(x.replace(",", "")) for x in interim_long_val)  # convert to str using list comp
+            dataframe.at[i, "longitude"] = dec_long_val.replace(",", "")  # remove "," from string on iterables
 
-    return finished_dataframe
+        elif len(raw_long_val) >= 5 and raw_long_val[-1] == west:  # Programmatically check there are at least 5 chars
+
+            interim_long_val = list(raw_long_val) # convert 'cell' value to list to manipulate indices within string
+            interim_long_val.pop()  # remove value in 4th index (for W not E values)
+            interim_long_val.insert(0, minus)  # insert minus before 1st index (for W not E values)
+            dec_long_val = ",".join(
+                str(x.replace(",", "")) for x in interim_long_val)  # convert to str using list comp
+            dataframe.at[i, "longitude"] = dec_long_val.replace(",", "")  # remove "," from string on iterables
 
 
-def creategeodataframe(finished_dataframe):
     '''
-    Create a geo-dataframe (gdf) from dataframe so points can be displayed on a map
-    Create geometry column in gdf object from Lat/Long dataframe columns
-    Credit to GeoPandas documentation at https://geopandas.org/en/stable/gallery/create_geopandas_from_pandas.html
-    for guidance creating a GeoPandas geo-dataframe from a Pandas dataframe.
+    STEP 5
+    PURPOSE
+    Create a Geopandas geo-dataframe (gdf) from a Pandas dataframe so points can be displayed on a map
+    Geodataframe object contains a geometry column/series derived from dataframe Latitude / Longitude series values. 
+    
+    CREDIT
+    GeoPandas documentation https://geopandas.org/en/stable/gallery/create_geopandas_from_pandas.html
+    
+    INPUT PARAMETERS
+    Pandas 'dataframe' object with decimalised latitude and longitude series values
+    
+    EXPECTED OUTPUT
+    Geopandas 'geodateframe' object with a projected POINT 'geometry' series 
+    using dataframe latitude and longitude series values.
     '''
     geodataframe = gpd.GeoDataFrame(
         dataframe,
         geometry=gpd.points_from_xy(dataframe.Longitude, dataframe.Latitude),
-        crs="EPSG:4326")
-    geodataframe = geodataframe.to_crs(32167)  # apply projection so data can be measured
+        crs="EPSG:4326")  # create a geodataframe with degrees coordinates
+
+    # Use below link to find best fit projection (USA - 84°W to 78°W and GoM OCS) for measuring.
+    # https://epsg.org/crs_32167/NAD83-BLM-17N-ftUS.html?sessionkey=kuqo0ksxvxapply
+    geodataframe = geodataframe.to_crs(32167)
+
     geodataframe["Length (km)"] = geodataframe.geometry.length / 1000  # add a length series to geodataframe
     print(geodataframe.to_string())  # show geodataframe in terminal
     geodataframe.to_file(
         filename=r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.gdb",
         layer="temptable", driver="OpenFileGDB"
-    )
+    )  # save geodataframe object to a selected file directory on local disk
 
-    return geodataframe
+
+    '''
+    STEP 6
+    PURPOSE
+    Convert Point Geometries to Linestrings with GeoPandas
+
+    CREDIT
+    Stack Overflow https://stackoverflow.com/questions/66492804/convert-point-geometries-to-linestrings-with-geopandas
+
+    INPUT PARAMETERS
+    Using the Geopandas points_from_xy function, create a Linestring from Longitude and Latitude series' from dataframe
+
+    EXPECTED OUTPUT
+    
+    '''
+    # create a linestring object in the geodatabase from a sequence of POINT coordinates
+    # CREDIT
+    # swatchai https://stackoverflow.com/questions/66492804/convert-point-geometries-to-linestrings-with-geopandas
+    # https://gis.stackexchange.com/questions/238533/extracting-points-from-linestring-or-polygon-and-making-dictionary-out-of-them-i
+    # https://shapely.readthedocs.io/en/latest/reference/shapely.LineString.html
+
+    points = gpd.points_from_xy(dataframe.Longitude, dataframe.Latitude)  # create a list of points from the dataframe
+    stormtrack = LineString(points)  # create a LineString object named stormtrack from the points
+
+    print(f"Length of 'stormtrack' object= {stormtrack.length}.")  # test to check length before projection transform
+    stormtracklist = stormtrack.coords  # converts the coordinate sequence to a list of tuples if using outside Pandas
+
+
+    return stormtrack, stormtracklist  # make stormtrack and stormtracklist objects available to other functions
 
 
 '''
 MAP DISPLAY FUNCTIONS
 '''
-def savefig(image):
+def saveFig(image):
     '''
     Save the figure as stormtrackermap.png with a dpi of 300
     '''
     fig.savefig('stormtrackermap1.png', bbox_inches='tight', dpi=300)
 
 
-def displaymap(geodataframe):
+def displayMap(geodataframe):
     '''
     Render a map of the Gulf of Mexico
     '''
@@ -227,22 +335,16 @@ def displaymap(geodataframe):
 '''
 CALL FUNCTIONS
 '''
+# create empty instance of storm track list object
+stormtrack = []
 
 def main():
     '''
-    Call functions in correct order to read file and display map
+    Call functions in correct order to read file and display map with plotted geodataframe data.
     '''
-    # variables
-    dataframe = createdataframefromcsv(datasource)
-    updated_dataframe = datetimeconverter(dataframe)
-    finished_dataframe = latitudelongitudeparser(finished_dataframe)
-    geodataframe = creategeodataframe(geodataframe)
-
     #functions
-    createdataframefromcsv(dataframe)
-    datetimeconverter(updated_dataframe)
-    displaydataframe(updated_dataframe)
-    latitudelongitudeparser(updated_dataframe)
-    creategeodataframe(finished_dataframe)
-    displaymap(geodataframe)
+    createGeodataframe(datasource)
+    displaymap(stormtrack)
     savefig(image)
+
+main()
