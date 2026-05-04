@@ -15,16 +15,13 @@ from shapely.geometry import LineString  # req for reprojecting geographic geome
 GLOBAL VARIABLES [accessible to whole module each time an instance of plt is called]
 '''
 
-# data source
-datasource = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"
-
 
 '''
 DATA PROCESSING FUNCTIONS
 REWORKED - as creating dataframe is done once, no need to break different stages of build down to separate functions
 '''
 
-def createGeodataframe(datasource):
+def creategeodataframe():
     '''
     # STEP 1
     PURPOSE
@@ -43,6 +40,8 @@ def createGeodataframe(datasource):
     EXPECTED OUTPUT
     A new instance of a Pandas dataframe object named 'dataframe' containing data read from .csv file.
     '''
+    # data source
+    datasource = r"C:\Users\weir_\OneDrive\Documents\GitHub\stormtrackerproj\stormtracker\hurdat2Melissa2025.txt"
     dataframe = pd.read_csv(datasource)
 
     '''
@@ -118,7 +117,6 @@ def createGeodataframe(datasource):
     Decimalised value replaces the raw value.
     
     Note, degrees run from 180 to 0 to -180 degrees.
-    Text string for lats/longs <100 degrees = 5 characters.
     Text string for lats/longs <100 degrees = 6 characters.
     To verify if data is correct there must be at least 5 characters.
     Use a try/else statement within loop to improve error handling in future development.
@@ -164,7 +162,7 @@ def createGeodataframe(datasource):
             interim_long_val.pop()  # remove the letter value in 4th index
             dec_long_val = ",".join(
                 str(x.replace(",", "")) for x in interim_long_val)  # convert to str using list comp
-            dataframe.at[i, "longitude"] = dec_long_val.replace(",", "")  # remove "," from string on iterables
+            dataframe.at[i, "Longitude"] = dec_long_val.replace(",", "")  # remove "," from string on iterables
 
         elif len(raw_long_val) >= 5 and raw_long_val[-1] == west:  # Programmatically check there are at least 5 chars
 
@@ -173,7 +171,7 @@ def createGeodataframe(datasource):
             interim_long_val.insert(0, minus)  # insert minus before 1st index (for W not E values)
             dec_long_val = ",".join(
                 str(x.replace(",", "")) for x in interim_long_val)  # convert to str using list comp
-            dataframe.at[i, "longitude"] = dec_long_val.replace(",", "")  # remove "," from string on iterables
+            dataframe.at[i, "Longitude"] = dec_long_val.replace(",", "")  # remove "," from string on iterables
 
 
     '''
@@ -192,11 +190,9 @@ def createGeodataframe(datasource):
     Geopandas 'geodateframe' object with a projected POINT 'geometry' series 
     using dataframe latitude and longitude series values.
     '''
-    geodataframe = gpd.GeoDataFrame(
-        dataframe,
-        geometry=gpd.points_from_xy(dataframe.Longitude, dataframe.Latitude),
-        crs="EPSG:4326"
-    )  # create a geodataframe with degrees coordinates
+    # create a geodataframe with degrees coordinates
+    geodataframe = gpd.GeoDataFrame(dataframe, geometry=gpd.points_from_xy(dataframe.Longitude, dataframe.Latitude),
+                                    crs="EPSG:4326")
 
     # Use below link to find best fit projection (USA - 84°W to 78°W and GoM OCS) for measuring.
     # https://epsg.org/crs_32167/NAD83-BLM-17N-ftUS.html?sessionkey=kuqo0ksxvxapply
@@ -223,7 +219,7 @@ def createGeodataframe(datasource):
     Using the Geopandas points_from_xy function, create a Linestring from Longitude and Latitude series' from dataframe
 
     EXPECTED OUTPUT
-    A LineString which is actually a list of tuples which can then be passed to displaymap function and plotted to axes.
+    A LineString which is actually a list of tuples which can then be passed to displaymap() function and plotted to axes.
     
     '''
     # create a linestring object in the geodatabase from a sequence of POINT coordinates
@@ -235,13 +231,14 @@ def createGeodataframe(datasource):
     # DEBUGGING - length will be calculated in degrees with below code.
     # Need to parse geometry series from geodataframe with transformed projection for calcuations in metres
     points = gpd.points_from_xy(
-        geodataframe.Longitude, geodataframe.Latitude)  # create a list of points from the dataframe
+        geodataframe.geometry.x, geodataframe.geometry.y, crs="EPSG:4326")
+        #geodataframe.Longitude, geodataframe.Latitude)  # create a list of points from the dataframe
     stormtrack = LineString(points)  # create a LineString object named stormtrack from the points
 
-    print(f"Length of 'stormtrack' object= {stormtrack.length}.")  # test to check length before projection transform
+    print(f"Length of 'stormtrack' object= {stormtrack.length / 1000} kilometres.")  # test to check length after projection transform
     stormtracklist = stormtrack.coords  # converts the coordinate sequence to a list of tuples if using outside Pandas
 
-    # make geodataframe, stormtrack and stormtracklist objects available to other functions
+    # make geodataframe, stormtrack objects available to other functions
     return geodataframe, stormtrack, stormtracklist
 
 
@@ -249,7 +246,7 @@ def createGeodataframe(datasource):
 MAP DISPLAY FUNCTIONS
 '''
 
-def saveFig(image):
+def savefig(image):
     '''
     PURPOSE
     Save the figure as stormtrackermap.png with a dpi of 300
@@ -263,7 +260,7 @@ def saveFig(image):
     fig.savefig('stormtrackermap1.png', bbox_inches='tight', dpi=300)
 
 
-def displayMap(geodataframe, stormtrack):
+def displaymap(geodataframe, stormtrack):
     '''
     PURPOSE
     Render a tailored map of the Gulf of Mexico showing path of Storm Melissa (2025)
@@ -313,6 +310,9 @@ def displayMap(geodataframe, stormtrack):
     # Add title to map
     ax.title.set_text('Storm Track Map \n Gulf of Mexico')
 
+    # add Legend
+    plt.legend(title="Legend", loc="center left")
+
     # add and customise north arrow
     # Credit moss_xyz - https://stackoverflow.com/a/79346562
     north_arrow(
@@ -340,7 +340,6 @@ def displayMap(geodataframe, stormtrack):
     )
     ax.add_artist(scale_bar)
 
-
     # save the figure to a .png image
     image = fig.savefig('stormtrackermap.png', bbox_inches='tight', dpi=300)
 
@@ -357,16 +356,15 @@ def displayMap(geodataframe, stormtrack):
 '''
 CALL FUNCTIONS
 '''
-geodataframe = createGeodataframe(datasource)
-# create empty instance of storm track list object
-stormtracklist = []
-
 def main():
     '''
     Call functions in correct order to read file and display map with plotted geodataframe data.
     '''
-    createGeodataframe(datasource)
-    displaymap(stormtrack)
+    # create empty instance of storm track object
+    stormtrack = creategeodataframe(stormtrack)
+
+    creategeodataframe()
+    displaymap(geodataframe, stormtrack)
     savefig(image)
 
 # run application
